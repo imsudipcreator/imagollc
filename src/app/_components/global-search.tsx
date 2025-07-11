@@ -64,12 +64,12 @@ const GlobalSearch = () => {
     }
 
 
-    console.log(query)
+    // console.log(query)
     useEffect(() => {
         const getSearchResults = async (query: string) => {
             if (query.length > 0) {
                 const results = await globalSearch(query);
-                console.log("results: ", results)
+                // console.log("results: ", results)
                 setSearchResults(results)
             }
         };
@@ -103,7 +103,7 @@ const GlobalSearch = () => {
                     {
                         ["Page", "App", "Website"].map((type) => {
                             const filtered = searchResults.filter((result) => result.type === type)
-                            console.log('filtered: ', filtered)
+                            // console.log('filtered: ', filtered)
                             return filtered.length > 0 ? (
                                 <ResultSection
                                     heading={type + 's'}
