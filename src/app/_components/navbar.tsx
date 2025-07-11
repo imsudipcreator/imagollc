@@ -22,6 +22,8 @@ import NotificationMenu from "@/components/originui/notification-menu"
 import UserMenu from "@/components/originui/user-menu"
 import { navigationLinks } from "@/constants/routes"
 import Link from "next/link"
+import ThemeToggle from "@/app/_components/theme-toggle"
+import GlobalSearch from "./global-search"
 
 // Navigation links array to be used in both desktop and mobile menus
 // const navigationLinks = [
@@ -74,7 +76,7 @@ import Link from "next/link"
 export default function Navbar() {
     const { user, isSignedIn } = useUser()
     return (
-        <header className="border-b px-4 md:px-6 w-full">
+        <header className="border-b md:px-6 w-full sticky top-0 px-6 z-50 bg-background">
             <div className="flex h-16 items-center justify-between gap-4">
                 {/* Left side */}
                 <div className="flex items-center gap-2">
@@ -155,7 +157,7 @@ export default function Navbar() {
                                                         (currentLink.submenu && nextLink.submenu && currentLink.type !== nextLink.type)
                                                     );
 
-                                                return nextLink && shouldShowSeparator ? (
+                                                return nextLink && !shouldShowSeparator ? (
                                                     <div
                                                         role="separator"
                                                         aria-orientation="horizontal"
@@ -253,29 +255,34 @@ export default function Navbar() {
                     </div>
                 </div>
                 {/* Right side */}
-                {
-                    isSignedIn ? (
-                        <div className="flex items-center gap-4">
-                            <div className="flex items-center gap-2">
-                                {/* Info menu */}
-                                <InfoMenu />
-                                {/* Notification */}
-                                <NotificationMenu />
+                <div className="flex items-center gap-2">
+                    <ThemeToggle />
+                    <GlobalSearch/>
+                    {
+                        isSignedIn ? (
+                            <div className="flex items-center gap-4">
+                                <div className="flex items-center gap-2">
+                                    {/* Info menu */}
+                                    <InfoMenu />
+                                    {/* Notification */}
+                                    <NotificationMenu />
+                                </div>
+                                {/* User menu */}
+                                <UserMenu />
                             </div>
-                            {/* User menu */}
-                            <UserMenu />
-                        </div>
-                    ) : (
-                        <div className="flex items-center gap-2">
-                            <Button asChild variant="ghost" size="sm" className="text-sm">
-                                <Link href="/sign-in">Sign In</Link>
-                            </Button>
-                            <Button asChild size="sm" className="text-sm">
-                                <Link href="/sign-up">Get Started</Link>
-                            </Button>
-                        </div>
-                    )
-                }
+                        ) : (
+                            <div className="flex items-center gap-2">
+                                {/* <Button asChild variant="ghost" size="sm" className="text-sm">
+                                    <Link href="/sign-in">Sign In</Link>
+                                </Button> */}
+                                <Button asChild size="sm" className="text-sm">
+                                    <Link href="/sign-up">Get Started</Link>
+                                </Button>
+                            </div>
+                        )
+                    }
+                </div>
+
 
             </div>
         </header>
