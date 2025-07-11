@@ -1,9 +1,23 @@
-import { BadgeQuestionMarkIcon, BookOpenTextIcon, BrainIcon, BugIcon, ClipboardListIcon, CodeXmlIcon, FileTextIcon, GalleryVerticalEndIcon, HandshakeIcon, MailIcon, PencilRulerIcon, ShieldUserIcon } from "lucide-react";
+import {
+  BadgeQuestionMarkIcon,
+  BookOpenTextIcon,
+  BrainIcon,
+  BugIcon,
+  ClipboardListIcon,
+  CodeXmlIcon,
+  FileTextIcon,
+  GalleryVerticalEndIcon,
+  HandshakeIcon,
+  MailIcon,
+  PencilRulerIcon,
+  ShieldUserIcon,
+  ShoppingBagIcon,
+} from "lucide-react";
 
 export const navigationLinks = [
   { href: "/", label: "Home" },
 
-  { href: '/store', label: "Store"},
+  { href: "/store", label: "Store" },
 
   {
     label: "Explore",
@@ -20,9 +34,17 @@ export const navigationLinks = [
     submenu: true,
     type: "icon",
     items: [
-      { href: "/developer/icreator", label: "Imago Creator", icon: PencilRulerIcon },
+      {
+        href: "/developer/icreator",
+        label: "Imago Creator",
+        icon: PencilRulerIcon,
+      },
       { href: "/developer/ieditor", label: "Imago Editor", icon: CodeXmlIcon },
-      { href: "/developer/docs", label: "Documentation", icon: BookOpenTextIcon },
+      {
+        href: "/developer/docs",
+        label: "Documentation",
+        icon: BookOpenTextIcon,
+      },
     ],
   },
 
@@ -42,10 +64,22 @@ export const navigationLinks = [
     submenu: true,
     type: "icon",
     items: [
-      { href: "/policy/privacy", label: "Privacy Policy", icon: ShieldUserIcon },
+      {
+        href: "/policy/privacy",
+        label: "Privacy Policy",
+        icon: ShieldUserIcon,
+      },
       { href: "/policy/terms", label: "Terms of Service", icon: FileTextIcon },
-      { href: "/policy/submission", label: "Submission Guidelines", icon : ClipboardListIcon },
-      { href: "/policy/developer", label: "Developer Agreement", icon: HandshakeIcon },
+      {
+        href: "/policy/submission",
+        label: "Submission Guidelines",
+        icon: ClipboardListIcon,
+      },
+      {
+        href: "/policy/developer",
+        label: "Developer Agreement",
+        icon: HandshakeIcon,
+      },
     ],
   },
 
@@ -60,11 +94,10 @@ export const navigationLinks = [
   },
 ];
 
-
-export const QuickLinks = [
-  { id: 1, name: "iStore", href: "/apps" },
-  { id: 2, name: "Intelligence", href: "/intelligence"},
-  { id: 3, name: "Community", href: "/community" },
+export const quickLinks = [
+  { label: "Intelligence", href: "/intelligence", icon: BrainIcon },
+  { label: "iStore", href: "/apps", icon: ShoppingBagIcon },
+  { label: "Community", href: "/community", icon: GalleryVerticalEndIcon },
 ];
 
 export const ExploreRoutes = [
