@@ -313,7 +313,6 @@
   font-display: swap;
 }
 
-
 @layer utilities {
   .no-scrollbar::-webkit-scrollbar {
     display: none;
