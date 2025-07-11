@@ -20,18 +20,18 @@ export default function HeroSection() {
                         icon: <ImagoIcon className="h-4 w-4" />,
                     }}
                     content={{
-                        title: "The smarter way to",
-                        titleHighlight: "build & explore digital tools",
+                        title: "Reimagine how you",
+                        titleHighlight: "build, share & scale digital tools",
                         description:
-                            "Explore a growing library of apps, websites, and AI tools – built with speed, design, and real-world usability in mind.",
+                            "From blazing-fast apps to intelligent AI features — Imago is your creative launchpad. Discover tools built for performance, beauty, and real-world impact.",
                         primaryAction: {
                             href: "/store",
-                            text: "Browse Products",
+                            text: "Explore the Store",
                             icon: <ComponentIcon className="h-4 w-4" />,
                         },
                         secondaryAction: {
                             href: "/developer/docs",
-                            text: "Developer Docs",
+                            text: "Read Dev Docs",
                             icon: <BookIcon className="h-4 w-4" />,
                         },
                     }}

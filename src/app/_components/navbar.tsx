@@ -74,9 +74,9 @@ import GlobalSearch from "./global-search"
 // ]
 
 export default function Navbar() {
-    const { user, isSignedIn } = useUser()
+    const { isSignedIn } = useUser()
     return (
-        <header className="border-b md:px-6 w-full sticky top-0 px-6 z-50 bg-background">
+        <header className="border-b w-full sticky px-6 top-0 z-50 bg-background max-w-[80rem]">
             <div className="flex h-16 items-center justify-between gap-4">
                 {/* Left side */}
                 <div className="flex items-center gap-2">

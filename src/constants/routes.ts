@@ -100,49 +100,52 @@ export const quickLinks = [
   { label: "Community", href: "/community", icon: GalleryVerticalEndIcon },
 ];
 
-export const ExploreRoutes = [
-  { name: "Home", href: "/" },
-  { name: "iStore", href: "/apps" },
-  { name: "webStore", href: "/websites" },
-  { name: "Intelligence", href: "/intelligence" },
-  { name: "Community", href: "/community" },
+export const exploreRoutes = [
+  { label: "Home", href: "/" },
+  { label: "Store", href: "/store" },
+  { label: "Intelligence", href: "/intelligence" },
+  { label: "Community", href: "/community" },
 ];
 
-export const AccountRoutes = [
-  { name: "Manage Your Imago Account", href: "/" }, // You can update this href later
-  { name: "Imago Creator Account", href: "/apps" }, // Placeholder
+export const accountRoutes = [
+  { label: "Manage Your Imago Account", href: "/" }, // Replace href when account page exists
 ];
 
-export const DeveloperRoutes = [
-  { name: "Overview", href: "/developer" },
-  { name: "iCreator", href: "/developer/icreator" },
-  { name: "iEditor", href: "/developer/ieditor" },
-  { name: "Docs", href: "/developer/docs" },
+export const developerRoutes = [
+  { label: "Imago Creator", href: "/developer/icreator" },
+  { label: "Imago Editor", href: "/developer/ieditor" },
+  { label: "Documentation", href: "/developer/docs" },
 ];
 
-export const SupportRoutes = [
-  { name: "Contact Us", href: "/support/contact" },
-  { name: "FAQs", href: "/support/faq" },
-  { name: "Report a Bug", href: "/support/report" },
+export const supportRoutes = [
+  { label: "Contact Us", href: "/support/contact" },
+  { label: "FAQs", href: "/support/faq" },
+  { label: "Report a Bug", href: "/support/report" },
 ];
 
-export const LegalRoutes = [
-  { name: "Privacy Policy", href: "/policy/privacy" },
-  { name: "Terms of Service", href: "/policy/terms" },
-  { name: "Submission Guidelines", href: "/policy/submission" },
-  { name: "Developer Agreement", href: "/policy/developer" },
+export const legalRoutes = [
+  { label: "Privacy Policy", href: "/policy/privacy" },
+  { label: "Terms of Service", href: "/policy/terms" },
+  { label: "Submission Guidelines", href: "/policy/submission" },
+  { label: "Developer Agreement", href: "/policy/developer" },
 ];
 
-export const AboutRoutes = [
-  { name: "Our Vision", href: "/about/vision" },
-  { name: "Brand Assets", href: "/about/brand" },
+export const aboutRoutes = [
+  { label: "Our Vision", href: "/about/vision" },
+  { label: "Brand Assets", href: "/about/brand" },
 ];
 
-export const NavigationSections = [
-  { title: "Explore Imago", routes: ExploreRoutes },
-  { title: "Account", routes: AccountRoutes },
-  { title: "Developer", routes: DeveloperRoutes },
-  { title: "Support", routes: SupportRoutes },
-  { title: "Legal", routes: LegalRoutes },
-  { title: "About", routes: AboutRoutes },
+export const bottomLinks = [
+  { label: "Terms of Service", href: "/policy/terms" },
+  { label: "Privacy Policy", href: "/policy/privacy" },
+  { label: "Sitemap", href: "/sitemap" },
+];
+
+export const navigationSections = [
+  { label: "Explore Imago", routes: exploreRoutes },
+  { label: "Account", routes: accountRoutes },
+  { label: "Developer", routes: developerRoutes },
+  { label: "Support", routes: supportRoutes },
+  { label: "Legal", routes: legalRoutes },
+  { label: "About", routes: aboutRoutes },
 ];

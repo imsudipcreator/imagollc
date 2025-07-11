@@ -72,14 +72,14 @@ function HeroContent({
   return (
     <div className="flex flex-col space-y-4">
       <motion.h1
-        className="text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl xl:text-8xl"
+        className="text-5xl font-bold tracking-tight sm:text-6xl lg:text-7xl"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease }}
       >
         {title}{" "}
         {titleHighlight && (
-          <span className="text-primary">{titleHighlight}</span>
+          <span className=" text-theme font-roobert italic">{titleHighlight}</span>
         )}
       </motion.h1>
       <motion.p
