@@ -1,11 +1,12 @@
 'use client'
+
 import React from 'react'
 
 const StorePage = () => {
   return (
-    <main>
+    <div>
       
-    </main>
+    </div>
   )
 }
 
