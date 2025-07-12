@@ -6,8 +6,8 @@ import { Footer } from './footer'
 
 const FooterWrapper = () => {
     const pathname = usePathname()
-    const footerExcludedRoutes = ['/intelligence']
-    const shouldHideFooter = footerExcludedRoutes.some((route) => route === pathname)
+    const footerExcludedRoutes = ['/intelligence', '/sign-in', '/sign-up']
+    const shouldHideFooter = footerExcludedRoutes.some((route) => pathname.startsWith(route))
 
     if (shouldHideFooter) {
         return null
