@@ -106,7 +106,7 @@ export default function NotificationMenu() {
         <Button
           size="icon"
           variant="ghost"
-          className="text-muted-foreground relative size-8 rounded-full shadow-none"
+          className="text-muted-foreground relative size-9 rounded-full shadow-none"
           aria-label="Open notifications"
         >
           <BellIcon size={16} aria-hidden="true" />

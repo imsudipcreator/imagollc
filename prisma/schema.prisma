@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Users {
-    id        String   @id @default(uuid())
+    id        String   @id @unique @default(uuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
@@ -17,7 +17,7 @@ model Users {
     developerSlug String? @unique
 
     apps     Apps[]
-    Websites Websites[]
+    websites Websites[]
 }
 
 model Apps {
@@ -25,14 +25,14 @@ model Apps {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    title         String
-    description   String
-    logo          String
-    developerSlug String
-    releaseNotes  String?
-    downloadLink  String?
-    screenshots String[]
-    developer     Users   @relation(fields: [developerSlug], references: [developerSlug], onDelete: Cascade)
+    title        String
+    description  String
+    logo         String
+    developerId  String
+    releaseNotes String?
+    downloadLink String?
+    screenshots  String[]
+    developer    Users    @relation(fields: [developerId], references: [id], onDelete: Cascade)
 }
 
 model Websites {
@@ -43,7 +43,7 @@ model Websites {
     title         String
     description   String
     featuredImage String
-    developerSlug String
+    developerId   String
     url           String
-    developer     Users  @relation(fields: [developerSlug], references: [developerSlug], onDelete: Cascade)
+    developer     Users  @relation(fields: [developerId], references: [id], onDelete: Cascade)
 }

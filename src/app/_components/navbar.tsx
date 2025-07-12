@@ -84,7 +84,7 @@ export default function Navbar() {
                     <Popover>
                         <PopoverTrigger asChild>
                             <Button
-                                className="group size-8 md:hidden"
+                                className="group size-8 md:hidden text-foreground"
                                 variant="ghost"
                                 size="icon"
                             >

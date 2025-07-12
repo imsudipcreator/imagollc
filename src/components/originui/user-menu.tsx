@@ -22,17 +22,42 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { useUser } from "@clerk/nextjs"
+import { SignOutButton, useUser } from "@clerk/nextjs"
+import { useEffect, useState } from "react"
+import { toast } from "sonner"
 
 export default function UserMenu() {
   const { user } = useUser()
+  const [shortName, setShortName] = useState("NN")
+
+  const shortenedUsername = (firstName: string, lastName: string): string => {
+    const firstLetter = firstName.split('')[0]
+    const lastLetter = lastName.split('')[0]
+
+    return `${firstLetter}${lastLetter}`
+  }
+
+  useEffect(() => {
+    const firstName = user?.firstName
+    const lastName = user?.lastName
+    if (firstName && lastName) {
+      const result = shortenedUsername(firstName, lastName)
+      setShortName(result)
+    } else {
+      setShortName("NN")
+      toast.error("Something went wrong", {
+        description: "For some reason, your name could not be found"
+      })
+    }
+  }, [user])
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-auto p-0 hover:bg-transparent">
+        <Button variant="ghost" size={'sm'} className="h-auto p-0 hover:bg-transparent rounded-full">
           <Avatar>
-            <AvatarImage src="./avatar.jpg" alt="Profile image" />
-            <AvatarFallback>KK</AvatarFallback>
+            <AvatarImage className="size-6" src={user?.hasImage ? user?.imageUrl : undefined} alt="Profile image" />
+            <AvatarFallback className="text-foreground">{shortName}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
@@ -49,11 +74,11 @@ export default function UserMenu() {
         <DropdownMenuGroup>
           <DropdownMenuItem>
             <BoltIcon size={16} className="opacity-60" aria-hidden="true" />
-            <span>Option 1</span>
+            <span>Profile</span>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Layers2Icon size={16} className="opacity-60" aria-hidden="true" />
-            <span>Option 2</span>
+            <span>Gallery</span>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <BookOpenIcon size={16} className="opacity-60" aria-hidden="true" />
@@ -72,10 +97,12 @@ export default function UserMenu() {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <LogOutIcon size={16} className="opacity-60" aria-hidden="true" />
-          <span>Logout</span>
-        </DropdownMenuItem>
+        <SignOutButton>
+          <DropdownMenuItem >
+            <LogOutIcon size={16} className="opacity-60" aria-hidden="true" />
+            <span className="text-red-400">Logout</span>
+          </DropdownMenuItem>
+        </SignOutButton>
       </DropdownMenuContent>
     </DropdownMenu>
   )

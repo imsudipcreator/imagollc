@@ -79,7 +79,7 @@ const GlobalSearch = () => {
 
     return (
         <div className='flex items-center justify-center'>
-            <Button variant={'ghost'} size={'sm'} onClick={() => setOpen(open => !open)}>
+            <Button variant={'ghost'} size={'icon'} className="text-muted-foreground rounded-full" onClick={() => setOpen(open => !open)}>
                 <SearchIcon />
             </Button>
             <CommandDialog open={open} onOpenChange={setOpen}>
@@ -87,19 +87,29 @@ const GlobalSearch = () => {
                 {/* <Input value={query} onChange={(e) => setQuery(e.target.value)}/> */}
                 <CommandList>
                     <CommandEmpty>No results found.</CommandEmpty>
-                    <CommandGroup heading="Suggestions">
-                        {
-                            quickLinks.map((link) => (
-                                <CommandItem asChild key={link.label}>
-                                    <Link href={link.href}>
-                                        <link.icon />
-                                        {link.label}
-                                    </Link>
-                                </CommandItem>
-                            ))
-                        }
-                    </CommandGroup>
-                    <CommandSeparator />
+
+                    {
+                        searchResults.length === 0 && (
+                            <>
+                                <CommandGroup heading="Suggestions">
+                                    {
+                                        quickLinks.map((link) => (
+                                            <CommandItem asChild key={link.label}>
+                                                <Link href={link.href}>
+                                                    <link.icon />
+                                                    {link.label}
+                                                </Link>
+                                            </CommandItem>
+                                        ))
+                                    }
+                                </CommandGroup>
+                                <CommandSeparator />
+                            </>
+
+                        )
+                    }
+
+
                     {
                         ["Page", "App", "Website"].map((type) => {
                             const filtered = searchResults.filter((result) => result.type === type)
@@ -110,7 +120,8 @@ const GlobalSearch = () => {
                                     key={type}
                                     results={filtered}
                                 />
-                            ) : null
+                            ) :
+                                null
                         })
                     }
 
@@ -139,7 +150,7 @@ const ResultSection = ({
             {
                 results.map((result) => (
                     <CommandItem key={result.label} value={result.label} asChild>
-                        <Link href={result.href} className=''>
+                        <Link href={result.href} className='cursor-pointer'>
                             {result.icon}
                             {result.label}
                         </Link>
