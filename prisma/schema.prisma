@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
     provider = "prisma-client-js"
 }
@@ -10,11 +7,43 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
+model Users {
+    id        String   @id @default(uuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    @@index([name])
+    fullname      String
+    email         String
+    developerSlug String? @unique
+
+    apps     Apps[]
+    Websites Websites[]
+}
+
+model Apps {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    title         String
+    description   String
+    logo          String
+    developerSlug String
+    releaseNotes  String?
+    downloadLink  String?
+    screenshots String[]
+    developer     Users   @relation(fields: [developerSlug], references: [developerSlug], onDelete: Cascade)
+}
+
+model Websites {
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    title         String
+    description   String
+    featuredImage String
+    developerSlug String
+    url           String
+    developer     Users  @relation(fields: [developerSlug], references: [developerSlug], onDelete: Cascade)
 }

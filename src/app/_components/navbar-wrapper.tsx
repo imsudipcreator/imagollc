@@ -6,8 +6,8 @@ import { usePathname } from 'next/navigation'
 
 const NavbarWrapper = () => {
     const pathname = usePathname()
-    const navbarExcludedRoutes = ['/intelligence']
-    const shouldHideNavbar = navbarExcludedRoutes.some((route) => route === pathname)
+    const navbarExcludedRoutes = ['/intelligence', '/sign-in', '/sign-up']
+    const shouldHideNavbar = navbarExcludedRoutes.some((route) => pathname.startsWith(route))
 
     if (shouldHideNavbar) {
         return null
