@@ -1,4 +1,4 @@
-import prisma from "@/lib/prisma";
+import { db } from "@/server/db";
 import { verifyWebhook } from "@clerk/nextjs/webhooks";
 import { type NextRequest } from "next/server";
 
@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
       const email = email_addresses[0]?.email_address;
       if (!email) throw new Error("Error: Email could not be found!");
 
-      await prisma.users.create({
+      await db.users.create({
         data: {
           id : id,
           email: email,
