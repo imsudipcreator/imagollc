@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export const Footer = () => {
     return (
-        <section className="py-32  max-w-[80rem] w-full px-6">
+        <section className="pt-32 pb-20 max-w-[80rem] w-full px-6 bg-sidebar-accent">
             <div className="container">
                 <footer>
                     <div className="grid grid-cols-2 gap-8 lg:grid-cols-6 ">

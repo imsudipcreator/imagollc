@@ -1,16 +1,18 @@
 import {
-  BadgeQuestionMarkIcon,
-  BookOpenTextIcon,
+  BadgeQuestionMark,
+  Book,
+  Brain,
   BrainIcon,
-  BugIcon,
+  Bug,
   ClipboardListIcon,
-  CodeXmlIcon,
-  FileTextIcon,
+  CodeXml,
+  FileText,
+  GalleryVerticalEnd,
   GalleryVerticalEndIcon,
   HandshakeIcon,
-  MailIcon,
-  PencilRulerIcon,
-  ShieldUserIcon,
+  MessageCircleMore,
+  PencilRuler,
+  ShieldUser,
   ShoppingBagIcon,
 } from "lucide-react";
 
@@ -24,8 +26,8 @@ export const navigationLinks = [
     submenu: true,
     type: "icon",
     items: [
-      { href: "/intelligence", label: "Intelligence", icon: BrainIcon },
-      { href: "/community", label: "Community", icon: GalleryVerticalEndIcon },
+      { href: "/intelligence", label: "Intelligence", icon: Brain },
+      { href: "/community", label: "Community", icon: GalleryVerticalEnd },
     ],
   },
 
@@ -37,13 +39,13 @@ export const navigationLinks = [
       {
         href: "/developer/icreator",
         label: "Imago Creator",
-        icon: PencilRulerIcon,
+        icon: PencilRuler,
       },
-      { href: "/developer/ieditor", label: "Imago Editor", icon: CodeXmlIcon },
+      { href: "/developer/ieditor", label: "Imago Editor", icon: CodeXml },
       {
         href: "/developer/docs",
         label: "Documentation",
-        icon: BookOpenTextIcon,
+        icon: Book,
       },
     ],
   },
@@ -53,9 +55,9 @@ export const navigationLinks = [
     submenu: true,
     type: "icon",
     items: [
-      { href: "/support/contact", label: "Contact Us", icon: MailIcon },
-      { href: "/support/faq", label: "FAQs", icon: BadgeQuestionMarkIcon },
-      { href: "/support/report", label: "Report a Bug", icon: BugIcon },
+      { href: "/support/contact", label: "Contact Us", icon: MessageCircleMore },
+      { href: "/support/faq", label: "FAQs", icon: BadgeQuestionMark },
+      { href: "/support/report", label: "Report a Bug", icon: Bug },
     ],
   },
 
@@ -67,9 +69,9 @@ export const navigationLinks = [
       {
         href: "/policy/privacy",
         label: "Privacy Policy",
-        icon: ShieldUserIcon,
+        icon: ShieldUser,
       },
-      { href: "/policy/terms", label: "Terms of Service", icon: FileTextIcon },
+      { href: "/policy/terms", label: "Terms of Service", icon: FileText },
       {
         href: "/policy/submission",
         label: "Submission Guidelines",

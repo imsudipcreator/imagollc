@@ -21,7 +21,7 @@ export default function InfoMenu() {
         <Button
           size="icon"
           variant="ghost"
-          className="size-8 rounded-full shadow-none"
+          className="size-9 rounded-full shadow-none"
           aria-label="Open edit menu"
         >
           <InfoIcon
