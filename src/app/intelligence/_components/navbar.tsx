@@ -45,8 +45,8 @@ const Navbar = () => {
                             <DrawerContent>
                                 <div className='max-w-sm p-4 w-full mx-auto'>
                                     <DrawerHeader>
-                                        <DrawerTitle>
-                                            <Shapes className='size-5'/>
+                                        <DrawerTitle className='flex items-center gap-1 self-center'>
+                                            <Shapes className='size-4'/>
                                             My preferences
                                         </DrawerTitle>
                                         <DrawerDescription>

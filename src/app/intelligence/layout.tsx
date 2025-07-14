@@ -12,16 +12,16 @@ export const metadata: Metadata = {
 
 const IntelligenceLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className='flex w-full h-svh '>
-      <SidebarProvider>
+    <SidebarProvider>
+      <div className='flex w-full h-svh'>
         <AppSidebar />
         <main className='flex flex-col w-full h-full '>
           <Navbar />
           {children}
-          <InputBar/>
+          <InputBar />
         </main>
-      </SidebarProvider>
-    </div>
+      </div>
+    </SidebarProvider>
 
   )
 }
