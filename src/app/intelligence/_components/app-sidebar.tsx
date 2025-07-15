@@ -3,15 +3,15 @@
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
 import React from 'react'
 import ImagoIcon from '@/components/icons/imago-icon'
-import { Bell, ChevronsUpDown, CircleUser, Ellipsis, GalleryVerticalEnd, PencilLine, Pin, Plus, Search, Sparkles, Trash } from 'lucide-react'
-import { Button } from '@/components/ui/button';
+import { Bell, ChevronsUpDown, CircleUser, Ellipsis, GalleryVerticalEnd, PencilLine, Pin, Search, Sparkles, Trash } from 'lucide-react'
 import { useUser } from '@clerk/nextjs';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { useIsMobile } from '@/hooks/use-mobile'
-import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
+import { Button } from '@/components/ui/button'
+import SearchChats from './search-chats'
 
 
 
@@ -59,21 +59,22 @@ const AppSidebar = () => {
                         <SidebarGroupLabel>Playground</SidebarGroupLabel>
                         <SidebarMenu>
                             <SidebarMenuItem>
-                                <SidebarMenuButton>
-                                    <PencilLine />
-                                    New Chat
+                                <SidebarMenuButton asChild>
+                                    <Link href={'/intelligence/'}>
+                                        <PencilLine />
+                                        New Chat
+                                    </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
                             <SidebarMenuItem>
-                                <SidebarMenuButton>
-                                    <Search />
-                                    Search Chats
-                                </SidebarMenuButton>
+                                <SearchChats />
                             </SidebarMenuItem>
                             <SidebarMenuItem>
-                                <SidebarMenuButton>
-                                    <GalleryVerticalEnd />
-                                    Library
+                                <SidebarMenuButton asChild>
+                                    <Link href={'/intelligence/library'}>
+                                        <GalleryVerticalEnd />
+                                        Library
+                                    </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>
                         </SidebarMenu>
@@ -88,8 +89,8 @@ const AppSidebar = () => {
                                             {chat.label}
                                             <DropdownMenu>
                                                 <DropdownMenuTrigger asChild>
-                                                    <button  className='ml-auto outline-none'>
-                                                        <Ellipsis className='size-4'/>
+                                                    <button className='ml-auto outline-none'>
+                                                        <Ellipsis className='size-4' />
                                                     </button>
                                                 </DropdownMenuTrigger>
                                                 <DropdownMenuContent>
@@ -195,17 +196,22 @@ const AppSidebar = () => {
                         ) : (
                             <>
                                 <SidebarMenuItem>
-                                    <SidebarMenuButton>
-                                        <Link href={'/sign-in'}>
-                                            Sign in
-                                        </Link>
+                                    <SidebarMenuButton asChild>
+                                        <Button variant={'default'}>
+                                            <Link href={'/sign-in'}>
+                                                Sign in
+                                            </Link>
+                                        </Button>
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
                                 <SidebarMenuItem>
-                                    <SidebarMenuButton>
-                                        <Link href={'/sign-up'}>
-                                            Sign up
-                                        </Link>
+                                    <SidebarMenuButton asChild>
+                                        <Button variant={'outline'}>
+                                            <Link href={'/sign-up'}>
+                                                Sign up
+                                            </Link>
+                                        </Button>
+
                                     </SidebarMenuButton>
                                 </SidebarMenuItem>
                             </>

@@ -78,6 +78,7 @@ model Message {
     role   Role
     type   Type
     model  Model
+    content String
 
     user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
     chatSession Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)

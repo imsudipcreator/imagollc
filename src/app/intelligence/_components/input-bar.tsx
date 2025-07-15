@@ -11,6 +11,8 @@ import z from 'zod';
 import { Form, FormField } from '@/components/ui/form';
 import { api } from '@/trpc/react';
 import { toast } from 'sonner';
+import { useParams, useRouter } from 'next/navigation';
+import { useUser } from '@clerk/nextjs';
 
 
 const formSchema = z.object({
@@ -21,6 +23,9 @@ const formSchema = z.object({
 })
 
 const InputBar = () => {
+    const { user } = useUser()
+    const params = useParams()
+    const router = useRouter()
     const [selectedWebSearch, setSelectedWebSearch] = useState(false)
     const [isFocused, setIsFocused] = useState(false)
     const form = useForm<z.infer<typeof formSchema>>({
@@ -30,35 +35,70 @@ const InputBar = () => {
         }
     })
 
-    const generateResponse = api.ai.generateResponse.useMutation({
-        onSuccess: (data) => {
-            toast.success(data.assistant)
+    const createMessage = api.message.create.useMutation({
+        onSuccess: () => {
+            form.reset()
+            toast.success("success")
         },
         onError: () => {
             toast.error("something went wrong")
         }
     })
-    const onSubmit = async (values: z.infer<typeof formSchema>) => {
 
-        const response = await generateResponse.mutateAsync({
-            input: values.value
-        })
+    const createChat = api.chat.create.useMutation({
+        onSuccess: (data) => {
+            router.push(`/intelligence/chats/${data}`)
+        },
+        onError: () => {
+            toast.error("Error creating chat")
+        }
+    })
 
-        console.log(response)
+
+    const getChatId = async (): Promise<string> => {
+        if (!user?.id) return ""
+        const chatId = params?.id as string | undefined
+
+        if (!chatId) {
+            const newChatId = await createChat.mutateAsync({
+                userId: user.id
+            })
+
+            return newChatId
+        }
+
+        return chatId
     }
 
 
-    const isPending = generateResponse.isPending
+
+
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
+        if (!user) {
+            toast.error("User id could not be found")
+            return
+        }
+
+        await createMessage.mutateAsync({
+            input: values.value,
+            chatId: await getChatId(),
+            userId: user.id,
+            model: "imi1",
+        })
+    }
+
+
+    const isPending = createMessage.isPending || createChat.isPending
 
     return (
         <Form {...form}>
             <div className='w-full flex items-center justify-center pb-3 relative'>
                 <div className='h-6 absolute left-0 right-0 -top-6 bg-gradient-to-b from-transparent to-background' />
-                <form 
-                onSubmit={form.handleSubmit(onSubmit)} 
-                className={cn(
-                    'max-w-3xl w-full p-4 rounded-3xl border border-border mx-3.5 transition-colors duration-200',
-                    isFocused && 'border-black'
+                <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className={cn(
+                        'max-w-3xl w-full p-4 rounded-3xl border border-border mx-3.5 transition-colors duration-200',
+                        isFocused && 'border-black'
                     )}>
                     <FormField
                         control={form.control}
@@ -96,7 +136,7 @@ const InputBar = () => {
                         <div className='flex'>
                             <Button type='submit' disabled={!form.formState.isValid || isPending} size={'icon'} className='rounded-full'>
                                 {
-                                    isPending ? <Loader className='animate-spin'/> : <ArrowUp className='size-5' />
+                                    isPending ? <Loader className='animate-spin' /> : <ArrowUp className='size-5' />
                                 }
                             </Button>
                         </div>

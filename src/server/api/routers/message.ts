@@ -3,7 +3,7 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 import { db } from "@/server/db";
 import { inngest } from "@/inngest/client";
 
-export const aiRouter = createTRPCRouter({
+export const messageRouter = createTRPCRouter({
   getMessagesByChatId : publicProcedure
   .input(
     z.object({
@@ -22,7 +22,7 @@ export const aiRouter = createTRPCRouter({
 
     return messages
   }),
-  createMessage: publicProcedure
+  create : publicProcedure
     .input(
       z.object({
         input: z.string(),

@@ -69,6 +69,7 @@
     "next": "^15.2.3",
     "next-themes": "^0.4.6",
     "radix-ui": "^1.4.2",
+    "random-word-slugs": "^0.1.7",
     "react": "^19.0.0",
     "react-day-picker": "^9.8.0",
     "react-dom": "^19.0.0",

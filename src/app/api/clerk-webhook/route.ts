@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
       const email = email_addresses[0]?.email_address;
       if (!email) throw new Error("Error: Email could not be found!");
 
-      await db.users.create({
+      await db.user.create({
         data: {
           id : id,
           email: email,
