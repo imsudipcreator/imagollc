@@ -1,28 +1,47 @@
 import z from "zod";
-import { createTRPCRouter, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { db } from "@/server/db";
 import { inngest } from "@/inngest/client";
 
 export const messageRouter = createTRPCRouter({
-  getMessagesByChatId : publicProcedure
-  .input(
-    z.object({
-      userId : z.string(),
-      chatId : z.string()
-    })
-  )
-  .query( async ({ input }) => {
-    const messages = await db.message.findMany({
-      where : {
-        userId : input.userId,
-        chatId : input.chatId,
-      },
-      orderBy: { createdAt: "asc" }
-    })
+  getMany: protectedProcedure
+    .input(
+      z.object({
+        chatId: z.string(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      const messages = await db.message.findMany({
+        where: {
+          chatId: input.chatId,
+          userId: ctx.userId,
+        },
+        orderBy : {
+          createdAt : 'asc'
+        }
+      });
 
-    return messages
-  }),
-  create : publicProcedure
+
+      return messages
+    }),
+  getMessagesByChatId: protectedProcedure
+    .input(
+      z.object({
+        chatId: z.string(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      const messages = await db.message.findMany({
+        where: {
+          userId: ctx.userId,
+          chatId: input.chatId,
+        },
+        orderBy: { createdAt: "asc" },
+      });
+
+      return messages;
+    }),
+  create: protectedProcedure
     .input(
       z.object({
         input: z.string(),
@@ -37,19 +56,18 @@ export const messageRouter = createTRPCRouter({
           .optional(),
         chatId: z.string(),
         model: z.enum(["imi1", "imi1c", "imi2", "imi3", "imi4"]),
-        userId: z.string(),
       }),
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       await db.message.create({
         data: {
           id: crypto.randomUUID(),
-          userId: input.userId,
+          userId: ctx.userId,
           chatId: input.chatId,
           role: "user",
           type: "result",
           model: input.model,
-          content : input.input
+          content: input.input,
         },
       });
 
@@ -71,7 +89,5 @@ export const messageRouter = createTRPCRouter({
         name: "call-imi/run",
         data: input,
       });
-
-      ;
     }),
 });

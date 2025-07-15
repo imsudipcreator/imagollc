@@ -13,6 +13,7 @@ import { api } from '@/trpc/react';
 import { toast } from 'sonner';
 import { useParams, useRouter } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
+import { useQueryClient } from '@tanstack/react-query';
 
 
 const formSchema = z.object({
@@ -26,6 +27,7 @@ const InputBar = () => {
     const { user } = useUser()
     const params = useParams()
     const router = useRouter()
+    const queryClient = useQueryClient()
     const [selectedWebSearch, setSelectedWebSearch] = useState(false)
     const [isFocused, setIsFocused] = useState(false)
     const form = useForm<z.infer<typeof formSchema>>({
@@ -39,6 +41,12 @@ const InputBar = () => {
         onSuccess: () => {
             form.reset()
             toast.success("success")
+            if (params.id) {
+                void queryClient.invalidateQueries(
+                    api.message.getMany.useQuery({ chatId: params.id as string })
+                )
+            }
+
         },
         onError: () => {
             toast.error("something went wrong")
@@ -60,10 +68,7 @@ const InputBar = () => {
         const chatId = params?.id as string | undefined
 
         if (!chatId) {
-            const newChatId = await createChat.mutateAsync({
-                userId: user.id
-            })
-
+            const newChatId = await createChat.mutateAsync()
             return newChatId
         }
 
@@ -82,7 +87,6 @@ const InputBar = () => {
         await createMessage.mutateAsync({
             input: values.value,
             chatId: await getChatId(),
-            userId: user.id,
             model: "imi1",
         })
     }

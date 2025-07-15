@@ -1,9 +1,9 @@
 'use client'
 
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import ImagoIcon from '@/components/icons/imago-icon'
-import { Bell, ChevronsUpDown, CircleUser, Ellipsis, GalleryVerticalEnd, PencilLine, Pin, Search, Sparkles, Trash } from 'lucide-react'
+import { AlertCircle, Bell, ChevronsUpDown, CircleUser, Ellipsis, GalleryVerticalEnd, Loader, PencilLine, Pin, Search, Sparkles, Trash } from 'lucide-react'
 import { useUser } from '@clerk/nextjs';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -12,6 +12,9 @@ import { useIsMobile } from '@/hooks/use-mobile'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import SearchChats from './search-chats'
+import { api } from '@/trpc/react'
+import { useRouter } from 'next/navigation'
+import { Alert } from '@/components/ui/alert'
 
 
 
@@ -29,9 +32,17 @@ const chats = [
 ];
 
 
+type ChatType = {
+    slug: string | null;
+    id: string
+}
+
 const AppSidebar = () => {
     const isMobile = useIsMobile()
     const { isSignedIn, user } = useUser()
+    const router = useRouter()
+    const { data: chats, isLoading, isError } = api.chat.getMany.useQuery()
+
     return (
         <Sidebar collapsible='icon'>
             <SidebarHeader>
@@ -83,33 +94,38 @@ const AppSidebar = () => {
                         <SidebarGroupLabel>Chat History</SidebarGroupLabel>
                         <SidebarMenu>
                             {
-                                chats.map(chat => (
-                                    <SidebarMenuItem key={chat.href}>
-                                        <SidebarMenuButton>
-                                            {chat.label}
-                                            <DropdownMenu>
-                                                <DropdownMenuTrigger asChild>
-                                                    <button className='ml-auto outline-none'>
-                                                        <Ellipsis className='size-4' />
-                                                    </button>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent>
-                                                    <DropdownMenuItem>
-                                                        <Pin />
-                                                        Pin this chat
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuSeparator />
-                                                    <AlertDialogTrigger asChild>
-                                                        <DropdownMenuItem variant='destructive'>
-                                                            <Trash />
-                                                            Delete
-                                                        </DropdownMenuItem>
-                                                    </AlertDialogTrigger>
-                                                </DropdownMenuContent>
-                                            </DropdownMenu>
+                                isError && (
+                                    <SidebarMenuItem>
+                                        <Alert variant={'destructive'}>
+                                            <AlertCircle/>
+                                            <p>Something went wrong</p>
+                                            <ul className='text-xs list-inside text-nowrap list-disc mt-1'>
+                                                <li className=''>Check your network</li>
+                                                <li>Make sure you are logged in!</li>
+                                            </ul>
+                                        </Alert>
+                                    </SidebarMenuItem>
+                                )
+                            }
+                            {
+                                isLoading && (
+                                    <SidebarMenuItem>
+                                        <SidebarMenuButton className=''>
+                                            <Loader className='animate-spin' />
                                         </SidebarMenuButton>
                                     </SidebarMenuItem>
-                                ))
+                                )
+                            }
+                            {
+                                chats ? (
+                                    <ChatItem chats={chats} />
+                                ) : (
+                                    <SidebarMenuItem>
+                                        <SidebarMenuButton disabled variant={'outline'} className='hover:bg-none bg-transparent font-semibold text-muted-foreground'>
+                                            No Chats found
+                                        </SidebarMenuButton>
+                                    </SidebarMenuItem>
+                                )
                             }
 
                         </SidebarMenu>
@@ -226,3 +242,43 @@ const AppSidebar = () => {
 }
 
 export default AppSidebar
+
+
+interface MoreChatActionTypes {
+    chats: ChatType[]
+}
+
+const ChatItem = ({ chats }: MoreChatActionTypes) => {
+    const router = useRouter()
+
+    return (
+        chats.map((chat) => (
+            <SidebarMenuItem key={chat.id}>
+                <SidebarMenuButton className='cursor-pointer' onClick={() => router.push(`/intelligence/chats/${chat.id}`)}>
+                    {chat.slug ?? chat.id}
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <div className='ml-auto outline-none'>
+                                <Ellipsis className='size-4' />
+                            </div>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                            <DropdownMenuItem>
+                                <Pin />
+                                Pin this chat
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <AlertDialogTrigger asChild>
+                                <DropdownMenuItem variant='destructive'>
+                                    <Trash />
+                                    Delete
+                                </DropdownMenuItem>
+                            </AlertDialogTrigger>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </SidebarMenuButton>
+            </SidebarMenuItem>
+        ))
+    )
+
+}
