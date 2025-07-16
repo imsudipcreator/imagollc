@@ -10,7 +10,7 @@ export const chatRouter = createTRPCRouter({
         userId: ctx.userId,
       },
       orderBy: {
-        updatedAt: "asc",
+        updatedAt: "desc",
       },
       select: {
         id: true,

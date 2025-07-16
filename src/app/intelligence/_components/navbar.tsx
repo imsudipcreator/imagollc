@@ -22,7 +22,7 @@ const Navbar = () => {
 
     // },[pathname])
     return (
-        <nav className='flex items-center justify-between h-12  w-full px-3 py-2'>
+        <nav className='flex items-center justify-between h-12 w-full px-3 py-2'>
             <div className='flex items-center justify-start gap-3 h-full'>
                 <SidebarTrigger>
                     <Button variant={'secondary'} size={'sm'}>

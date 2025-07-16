@@ -13,8 +13,9 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Button } from '@/components/ui/button'
 import SearchChats from './search-chats'
 import { api } from '@/trpc/react'
-import { useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import { Alert } from '@/components/ui/alert'
+import { cn } from '@/lib/utils'
 
 
 
@@ -97,7 +98,7 @@ const AppSidebar = () => {
                                 isError && (
                                     <SidebarMenuItem>
                                         <Alert variant={'destructive'}>
-                                            <AlertCircle/>
+                                            <AlertCircle />
                                             <p>Something went wrong</p>
                                             <ul className='text-xs list-inside text-nowrap list-disc mt-1'>
                                                 <li className=''>Check your network</li>
@@ -250,11 +251,19 @@ interface MoreChatActionTypes {
 
 const ChatItem = ({ chats }: MoreChatActionTypes) => {
     const router = useRouter()
+    const { id } = useParams()
+
+
+    console.log(id)
 
     return (
         chats.map((chat) => (
             <SidebarMenuItem key={chat.id}>
-                <SidebarMenuButton className='cursor-pointer' onClick={() => router.push(`/intelligence/chats/${chat.id}`)}>
+                <SidebarMenuButton
+                    className={cn('cursor-pointer',
+                        chat.id === id && 'bg-sidebar-border hover:bg-sidebar-border'
+                    )}
+                    onClick={() => router.push(`/intelligence/chats/${chat.id}`)}>
                     {chat.slug ?? chat.id}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>

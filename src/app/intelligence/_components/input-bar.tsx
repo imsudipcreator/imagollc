@@ -30,6 +30,9 @@ const InputBar = () => {
     const queryClient = useQueryClient()
     const [selectedWebSearch, setSelectedWebSearch] = useState(false)
     const [isFocused, setIsFocused] = useState(false)
+    const { data: messages } = api.message.getHistoryforAi.useQuery({
+        chatId: params.id as string
+    })
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -63,8 +66,9 @@ const InputBar = () => {
     })
 
 
+
     const getChatId = async (): Promise<string> => {
-        if (!user?.id) return ""
+        if (!user?.id) throw new Error("User id not found")
         const chatId = params?.id as string | undefined
 
         if (!chatId) {
@@ -73,6 +77,17 @@ const InputBar = () => {
         }
 
         return chatId
+    }
+
+
+
+    const getHistory = () => {
+        const history = messages?.map((message) => ({
+            sender: message.role,
+            content: message.content
+        }))
+
+        return history ?? []
     }
 
 
@@ -88,6 +103,7 @@ const InputBar = () => {
             input: values.value,
             chatId: await getChatId(),
             model: "imi1",
+            history: getHistory()
         })
     }
 
@@ -96,12 +112,12 @@ const InputBar = () => {
 
     return (
         <Form {...form}>
-            <div className='w-full flex items-center justify-center pb-3 relative'>
-                <div className='h-6 absolute left-0 right-0 -top-6 bg-gradient-to-b from-transparent to-background' />
+            <div className='md:w-full w-[94%] flex max-w-3xl items-center justify-center mx-auto left-0 right-0 pb-3 absolute bottom-0 bg-background rounded-t-3xl'>
+                {/* <div className='h-6 absolute left-0 right-0 -top-6 bg-gradient-to-b from-transparent to-background' /> */}
                 <form
                     onSubmit={form.handleSubmit(onSubmit)}
                     className={cn(
-                        'max-w-3xl w-full p-4 rounded-3xl border border-border mx-3.5 transition-colors duration-200',
+                        'max-w-3xl w-full p-4 rounded-3xl border border-border transition-colors duration-200',
                         isFocused && 'border-black'
                     )}>
                     <FormField

@@ -4,6 +4,31 @@ import { db } from "@/server/db";
 import { inngest } from "@/inngest/client";
 
 export const messageRouter = createTRPCRouter({
+  getHistoryforAi: protectedProcedure
+    .input(
+      z.object({
+        chatId: z.string(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      const messages = await db.message.findMany({
+        where: {
+          chatId: input.chatId,
+          userId: ctx.userId,
+        },
+        orderBy: {
+          createdAt: "asc",
+        },
+        select : {
+          role : true,
+          content : true
+        },
+        skip : 1,
+        take: 10,
+      });
+
+      return messages;
+    }),
   getMany: protectedProcedure
     .input(
       z.object({
@@ -16,13 +41,12 @@ export const messageRouter = createTRPCRouter({
           chatId: input.chatId,
           userId: ctx.userId,
         },
-        orderBy : {
-          createdAt : 'asc'
-        }
+        orderBy: {
+          createdAt: "asc",
+        },
       });
 
-
-      return messages
+      return messages;
     }),
   getMessagesByChatId: protectedProcedure
     .input(
@@ -87,7 +111,10 @@ export const messageRouter = createTRPCRouter({
 
       await inngest.send({
         name: "call-imi/run",
-        data: input,
+        data: {
+          ...input,
+          userId: ctx.userId,
+        },
       });
     }),
 });

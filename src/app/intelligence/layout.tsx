@@ -15,7 +15,7 @@ const IntelligenceLayout = ({ children }: { children: React.ReactNode }) => {
     <SidebarProvider>
       <div className='flex w-full h-svh'>
         <AppSidebar />
-        <main className='flex flex-col w-full h-full '>
+        <main className='flex flex-col flex-1 min-h-0 overflow-y-auto relative'>
           <Navbar />
           {children}
           <InputBar />
