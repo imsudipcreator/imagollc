@@ -3,22 +3,27 @@
 import { cn } from '@/lib/utils'
 import { api } from '@/trpc/react'
 import { useParams, useRouter } from 'next/navigation'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import MarkdownRender from '../../_components/markdown-render'
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuShortcut, ContextMenuTrigger } from '@/components/ui/context-menu'
 import { Loader, TriangleAlert } from 'lucide-react'
+import { useIntelligence } from '@/contexts/intelligence-context'
+
+
 
 const ChatPage = () => {
     const { id } = useParams()
     const router = useRouter()
+    const { isGeneratingResponse, isMessageLoading, isMessageError, messages } = useIntelligence()
     const { data: chatId, isLoading: chatIdVerifying } = api.chat.getOne.useQuery({
         chatId: id as string
+    }, {
+        enabled: !!id
     })
-
-    const { data: messages, isLoading: isMessageLoading, isError: isMessageError } = api.message.getMany.useQuery({
+    const { data: task } = api.task.getOne.useQuery({
         chatId: id as string
-    },{
-        refetchInterval : 1000
+    }, {
+        enabled: !!id,
     })
 
 
@@ -30,16 +35,18 @@ const ChatPage = () => {
     }, [chatId, router, chatIdVerifying])
 
 
-    if(isMessageLoading || chatIdVerifying){
+
+
+    if (isMessageLoading || chatIdVerifying) {
         <div className='flex justify-center items-center w-full h-[77%] '>
-            <Loader className='animate-spin'/>
+            <Loader className='animate-spin' />
         </div>
     }
 
 
-    if(isMessageError){
+    if (isMessageError) {
         <div className='flex justify-center items-center w-full h-[77%] text-destructive'>
-            <TriangleAlert className='size-10'/>
+            <TriangleAlert className='size-10' />
             <span>Something went wrong!</span>
         </div>
     }
@@ -70,6 +77,11 @@ const ChatPage = () => {
                             </ContextMenuContent>
                         </ContextMenu>
                     ))
+                }
+                {
+                    isGeneratingResponse.state && (
+                        <span className='text-muted-foreground font-semibold text-lg animate-pulse py-2 px-3'>{isGeneratingResponse.log}</span>
+                    )
                 }
             </div>
         </div >

@@ -14,6 +14,7 @@ import { toast } from 'sonner';
 import { useParams, useRouter } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
 import { useQueryClient } from '@tanstack/react-query';
+import { useIntelligence } from '@/contexts/intelligence-context';
 
 
 const formSchema = z.object({
@@ -25,13 +26,16 @@ const formSchema = z.object({
 
 const InputBar = () => {
     const { user } = useUser()
-    const params = useParams()
+    const { id } = useParams()
     const router = useRouter()
+    const { setIsGeneratingResponse, setMessages } = useIntelligence()
     const queryClient = useQueryClient()
     const [selectedWebSearch, setSelectedWebSearch] = useState(false)
     const [isFocused, setIsFocused] = useState(false)
     const { data: messages } = api.message.getHistoryforAi.useQuery({
-        chatId: params.id as string
+        chatId: id as string
+    }, {
+        enabled: !!id
     })
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -40,15 +44,26 @@ const InputBar = () => {
         }
     })
 
+    const generateResponse = api.ai.generate.useMutation({
+        onSuccess: (data) => {
+            console.log("response generated")
+        }
+    })
+
     const createMessage = api.message.create.useMutation({
-        onSuccess: () => {
+        onSuccess: (data) => {
             form.reset()
             toast.success("success")
-            if (params.id) {
+            setIsGeneratingResponse({
+                state: true,
+                log: "Generating"
+            })
+            if (id) {
                 void queryClient.invalidateQueries(
-                    api.message.getMany.useQuery({ chatId: params.id as string })
+                    api.message.getMany.useQuery({ chatId: id as string })
                 )
             }
+            console.log("data", data)
 
         },
         onError: () => {
@@ -69,7 +84,7 @@ const InputBar = () => {
 
     const getChatId = async (): Promise<string> => {
         if (!user?.id) throw new Error("User id not found")
-        const chatId = params?.id as string | undefined
+        const chatId = id as string | undefined
 
         if (!chatId) {
             const newChatId = await createChat.mutateAsync()
@@ -94,17 +109,36 @@ const InputBar = () => {
 
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        if (!user) {
+        if (!user?.id) {
             toast.error("User id could not be found")
             return
         }
-
-        await createMessage.mutateAsync({
+        const chatId = await getChatId()
+        const message = await createMessage.mutateAsync({
             input: values.value,
-            chatId: await getChatId(),
+            chatId: chatId,
             model: "imi1",
             history: getHistory()
         })
+
+        setMessages((prev) => [
+            ...prev,
+            message
+        ])
+        setIsGeneratingResponse({
+            state: true,
+            log: "Thinking"
+        })
+
+        const aiMessage = await generateResponse.mutateAsync({
+            chatId,
+            input: values.value,
+            model: "imi1",
+            history: getHistory()
+        })
+
+
+        console.log("aiMessageOnFrontend", aiMessage)
     }
 
 

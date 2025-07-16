@@ -1,7 +1,6 @@
 import z from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { db } from "@/server/db";
-import { inngest } from "@/inngest/client";
 
 export const messageRouter = createTRPCRouter({
   getHistoryforAi: protectedProcedure
@@ -19,11 +18,11 @@ export const messageRouter = createTRPCRouter({
         orderBy: {
           createdAt: "asc",
         },
-        select : {
-          role : true,
-          content : true
+        select: {
+          role: true,
+          content: true,
         },
-        skip : 1,
+        skip: 1,
         take: 10,
       });
 
@@ -83,7 +82,7 @@ export const messageRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      await db.message.create({
+      const message = await db.message.create({
         data: {
           id: crypto.randomUUID(),
           userId: ctx.userId,
@@ -95,26 +94,6 @@ export const messageRouter = createTRPCRouter({
         },
       });
 
-      // const response = await fetch("https://tool-user-ai.onrender.com/chat", {
-      //   headers: { "Content-Type": "application/json" },
-      //   method: "POST",
-      //   body: JSON.stringify(input),
-      // });
-
-      // if (!response.ok) {
-      //   throw new Error(
-      //     "Something went wrong, model could not provide any responses",
-      //   );
-      // }
-
-      // const aiResponse = response.json();
-
-      await inngest.send({
-        name: "call-imi/run",
-        data: {
-          ...input,
-          userId: ctx.userId,
-        },
-      });
+      return message;
     }),
 });

@@ -73,11 +73,11 @@ model Message {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    userId String
-    chatId String
-    role   Role
-    type   Type
-    model  Model
+    userId  String
+    chatId  String
+    role    Role
+    type    Type
+    model   Model
     content String
 
     user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -94,4 +94,13 @@ model Chat {
 
     user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
     messages Message[]
+}
+
+model Task {
+    id        String   @id @unique @default(uuid())
+    createdAt DateTime @default(now())
+
+    chatId String @unique
+    userId String @unique
+    status String
 }
