@@ -18,11 +18,6 @@ type MessageType = {
     type: "error" | "result"
 }
 
-type SettingsType = {
-    model: string,
-    persona: string
-}
-
 
 
 interface IntelligenceContextType {

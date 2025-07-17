@@ -1,9 +1,9 @@
 'use client'
 
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React from 'react'
 import ImagoIcon from '@/components/icons/imago-icon'
-import { AlertCircle, Bell, ChevronsUpDown, CircleUser, Ellipsis, GalleryVerticalEnd, Loader, Pencil, PencilLine, Pin, Search, Sparkles, Trash } from 'lucide-react'
+import { AlertCircle, Bell, ChevronsUpDown, CircleUser, Ellipsis, GalleryVerticalEnd, Loader, Pencil, PencilLine, Pin, Sparkles, Trash } from 'lucide-react'
 import { useUser } from '@clerk/nextjs';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -22,19 +22,18 @@ import { useSidebar } from '../contexts/SidebarContext'
 import { toast } from 'sonner'
 
 
-
-const chats = [
-    { label: "hustling-garg", href: "/chats/1234567890" },
-    { label: "silent-shadow", href: "/chats/0987654321" },
-    { label: "mhrefnight-coder", href: "/chats/1122334455" },
-    { label: "blazing-tiger", href: "/chats/2233445566" },
-    { label: "neon-knight", href: "/chats/3344556677" },
-    { label: "code-wizard", href: "/chats/4455667788" },
-    { label: "logic-lord", href: "/chats/5566778899" },
-    { label: "cyber-samurai", href: "/chats/6677889900" },
-    { label: "data-demon", href: "/chats/7788990011" },
-    { label: "matrix-mage", href: "/chats/8899001122" }
-];
+// const chats = [
+//     { label: "hustling-garg", href: "/chats/1234567890" },
+//     { label: "silent-shadow", href: "/chats/0987654321" },
+//     { label: "mhrefnight-coder", href: "/chats/1122334455" },
+//     { label: "blazing-tiger", href: "/chats/2233445566" },
+//     { label: "neon-knight", href: "/chats/3344556677" },
+//     { label: "code-wizard", href: "/chats/4455667788" },
+//     { label: "logic-lord", href: "/chats/5566778899" },
+//     { label: "cyber-samurai", href: "/chats/6677889900" },
+//     { label: "data-demon", href: "/chats/7788990011" },
+//     { label: "matrix-mage", href: "/chats/8899001122" }
+// ];
 
 
 type ChatType = {
