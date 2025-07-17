@@ -2,6 +2,11 @@ import { db } from "@/server/db";
 import { verifyWebhook } from "@clerk/nextjs/webhooks";
 import { type NextRequest } from "next/server";
 
+/**
+ * Handles incoming webhook POST requests, verifies the event, and creates a new user record if a "user.created" event is received.
+ *
+ * Returns an HTTP 200 response on success or an HTTP 400 response if verification or processing fails.
+ */
 export async function POST(req: NextRequest) {
   try {
     const evt = await verifyWebhook(req);

@@ -21,6 +21,13 @@ const geist = Geist({
   variable: "--font-geist-sans",
 });
 
+/**
+ * Root layout component that sets up global providers, theming, and structure for the application.
+ *
+ * Wraps all pages with authentication, tRPC, and theme providers, and includes the navigation bar, footer, and global toast notifications.
+ *
+ * @param children - The page content to render within the layout
+ */
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
