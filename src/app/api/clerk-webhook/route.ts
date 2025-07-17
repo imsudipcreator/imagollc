@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
 
     if (evt.type === "user.created") {
       const { created_at , first_name, last_name, email_addresses, id } = evt.data;
-      console.log('created_at', created_at)
+      // console.log('created_at', created_at)
       const email = email_addresses[0]?.email_address;
       if (!email) throw new Error("Error: Email could not be found!");
 

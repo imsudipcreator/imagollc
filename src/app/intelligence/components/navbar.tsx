@@ -8,15 +8,17 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { Separator } from '@/components/ui/separator'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { models, personas } from '@/constants/models'
+import { useIntelligence } from '@/contexts/intelligence-context'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { PanelLeft, Settings, Shapes } from 'lucide-react'
 import { usePathname } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 const Navbar = () => {
     const isMobile = useIsMobile()
     const [open, setOpen] = useState(false)
     const pathname = usePathname()
+
 
     // useEffect(()=>{
 
@@ -46,7 +48,7 @@ const Navbar = () => {
                                 <div className='max-w-sm p-4 w-full mx-auto'>
                                     <DrawerHeader>
                                         <DrawerTitle className='flex items-center gap-1 self-center'>
-                                            <Shapes className='size-4'/>
+                                            <Shapes className='size-4' />
                                             My preferences
                                         </DrawerTitle>
                                         <DrawerDescription>
@@ -67,7 +69,7 @@ const Navbar = () => {
                             <DialogContent>
                                 <DialogHeader>
                                     <DialogTitle className='flex items-center gap-1'>
-                                        <Shapes className='size-5'/>
+                                        <Shapes className='size-5' />
                                         My preferences
                                     </DialogTitle>
                                     <DialogDescription>
@@ -88,10 +90,8 @@ const Navbar = () => {
 
 export default Navbar
 
-
 const SettingsSection = () => {
-    const [selectedModel, setSelectedModel] = useState(models[0]?.value)
-    const [selectedPersona, setSelectedPersona] = useState(personas[0]?.value)
+    const { setSelectedModel, selectedModel, selectedPersona, setSelectedPersona} = useIntelligence()
 
     return (
         <section className='flex flex-col w-full pt-5 gap-6'>
@@ -125,7 +125,7 @@ const SettingsSection = () => {
                 <Select value={selectedPersona} onValueChange={setSelectedPersona}>
                     <SelectTrigger>
                         <SelectValue>
-                        {personas.find((p) => p.value === selectedPersona)?.label ?? "Select a persona"}
+                            {personas.find((p) => p.value === selectedPersona)?.label ?? "Select a persona"}
                         </SelectValue>
                     </SelectTrigger>
                     <SelectContent>
@@ -134,7 +134,7 @@ const SettingsSection = () => {
                             {
                                 personas.map((persona) => (
                                     <SelectItem value={persona.value} key={persona.value}>
-                                        <persona.icon/>
+                                        <persona.icon />
                                         <div className='flex flex-col'>
                                             <span>{persona.label}</span>
                                             <span className='text-muted-foreground text-xs truncate'>{persona.description}</span>

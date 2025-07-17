@@ -20,15 +20,10 @@ const ChatPage = () => {
     }, {
         enabled: !!id
     })
-    const { data: task } = api.task.getOne.useQuery({
-        chatId: id as string
-    }, {
-        enabled: !!id,
-    })
 
 
     useEffect(() => {
-        console.log(chatId)
+        // console.log(chatId)
         if (!chatId && !chatIdVerifying) {
             router.replace('/intelligence')
         }
@@ -38,17 +33,22 @@ const ChatPage = () => {
 
 
     if (isMessageLoading || chatIdVerifying) {
-        <div className='flex justify-center items-center w-full h-[77%] '>
-            <Loader className='animate-spin' />
-        </div>
+        return (
+            <div className='flex justify-center items-center w-full h-[77%] '>
+                <Loader className='animate-spin' />
+            </div>
+        )
+
     }
 
-
     if (isMessageError) {
-        <div className='flex justify-center items-center w-full h-[77%] text-destructive'>
-            <TriangleAlert className='size-10' />
-            <span>Something went wrong!</span>
-        </div>
+        return (
+            <div className='flex justify-center items-center w-full h-[77%] text-destructive'>
+                <TriangleAlert className='size-10' />
+                <span>Something went wrong!</span>
+            </div>
+        )
+
     }
 
 

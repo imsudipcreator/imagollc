@@ -1,3 +1,4 @@
+import type { ModelData, PersonaData } from "@/types/intel-types";
 import {
   Sparkles,
   Smile,
@@ -13,7 +14,7 @@ import {
 
 
 
-export const models = [
+export const models : ModelData[] = [
   {
     label: "IMI 1",
     value: "imi1",
@@ -30,6 +31,11 @@ export const models = [
     description: "Balanced and versatile",
   },
   {
+    label: "IMI 2",
+    value: "imi2c",
+    description: "All rounder",
+  },
+  {
     label: "IMI 3",
     value: "imi3",
     description: "Smarter with deeper reasoning",
@@ -41,7 +47,7 @@ export const models = [
   },
 ];
 
-export const personas = [
+export const personas : PersonaData[] = [
   {
     label: "Default",
     value: "default",

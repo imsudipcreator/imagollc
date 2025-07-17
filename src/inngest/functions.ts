@@ -33,7 +33,7 @@ export const callIMI = inngest.createFunction(
       return (await response.json()) as { assistant: string };
     });
 
-    console.log(event.data.userId);
+    // console.log(event.data.userId);
 
     await step.run("save-messages", async () => {
       await db.task.delete({

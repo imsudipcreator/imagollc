@@ -1,9 +1,9 @@
 'use client'
 
 import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
-import React, { useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState } from 'react'
 import ImagoIcon from '@/components/icons/imago-icon'
-import { AlertCircle, Bell, ChevronsUpDown, CircleUser, Ellipsis, GalleryVerticalEnd, Loader, PencilLine, Pin, Search, Sparkles, Trash } from 'lucide-react'
+import { AlertCircle, Bell, ChevronsUpDown, CircleUser, Ellipsis, GalleryVerticalEnd, Loader, Pencil, PencilLine, Pin, Search, Sparkles, Trash } from 'lucide-react'
 import { useUser } from '@clerk/nextjs';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -16,6 +16,10 @@ import { api } from '@/trpc/react'
 import { useParams, useRouter } from 'next/navigation'
 import { Alert } from '@/components/ui/alert'
 import { cn } from '@/lib/utils'
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTrigger } from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import { useSidebar } from '../contexts/SidebarContext'
+import { toast } from 'sonner'
 
 
 
@@ -39,10 +43,57 @@ type ChatType = {
 }
 
 const AppSidebar = () => {
+    const { slug, chatId, setSlug } = useSidebar()
     const isMobile = useIsMobile()
     const { isSignedIn, user } = useUser()
-    const router = useRouter()
     const { data: chats, isLoading, isError } = api.chat.getMany.useQuery()
+    const updateSlug = api.chat.updateOne.useMutation({
+        onSuccess: (data) => {
+            toast.success(data)
+        },
+        onError: () => {
+            toast.error("An error occured while updating chat slug")
+        }
+    })
+
+    const deleteChat = api.chat.deleteOne.useMutation({
+        onSuccess: (data) => {
+            toast.success(data)
+        },
+        onError: () => {
+            toast.error("An error occured while deleting this chat")
+        }
+    })
+
+    const handleDelete = async (chatId: string) => {
+        if (!chatId) {
+            toast.error("Chat id is required!")
+            return
+        }
+
+        await deleteChat.mutateAsync({
+            chatId
+        })
+    }
+
+    const onSubmit = async (slug: string, chatId: string) => {
+        if (slug.length < 2 || slug.length > 50) {
+            toast.error("Chat slug should be minimum of 2 and maximum of 50 characters!")
+            return
+        }
+
+        if (!chatId) {
+            toast.error("Chat id is required!")
+            return
+        }
+
+        await updateSlug.mutateAsync({
+            chatId,
+            slug
+        })
+
+    }
+
 
     return (
         <Sidebar collapsible='icon'>
@@ -67,82 +118,107 @@ const AppSidebar = () => {
             </SidebarHeader>
             <SidebarContent>
                 <AlertDialog>
-                    <SidebarGroup>
-                        <SidebarGroupLabel>Playground</SidebarGroupLabel>
-                        <SidebarMenu>
-                            <SidebarMenuItem>
-                                <SidebarMenuButton asChild>
-                                    <Link href={'/intelligence/'}>
-                                        <PencilLine />
-                                        New Chat
-                                    </Link>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-                            <SidebarMenuItem>
-                                <SearchChats />
-                            </SidebarMenuItem>
-                            <SidebarMenuItem>
-                                <SidebarMenuButton asChild>
-                                    <Link href={'/intelligence/library'}>
-                                        <GalleryVerticalEnd />
-                                        Library
-                                    </Link>
-                                </SidebarMenuButton>
-                            </SidebarMenuItem>
-                        </SidebarMenu>
-                    </SidebarGroup>
-                    <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
-                        <SidebarGroupLabel>Chat History</SidebarGroupLabel>
-                        <SidebarMenu>
-                            {
-                                isError && (
-                                    <SidebarMenuItem>
-                                        <Alert variant={'destructive'}>
-                                            <AlertCircle />
-                                            <p>Something went wrong</p>
-                                            <ul className='text-xs list-inside text-nowrap list-disc mt-1'>
-                                                <li className=''>Check your network</li>
-                                                <li>Make sure you are logged in!</li>
-                                            </ul>
-                                        </Alert>
-                                    </SidebarMenuItem>
-                                )
-                            }
-                            {
-                                isLoading && (
-                                    <SidebarMenuItem>
-                                        <SidebarMenuButton className=''>
-                                            <Loader className='animate-spin' />
-                                        </SidebarMenuButton>
-                                    </SidebarMenuItem>
-                                )
-                            }
-                            {
-                                chats ? (
-                                    <ChatItem chats={chats} />
-                                ) : (
-                                    <SidebarMenuItem>
-                                        <SidebarMenuButton disabled variant={'outline'} className='hover:bg-none bg-transparent font-semibold text-muted-foreground'>
-                                            No Chats found
-                                        </SidebarMenuButton>
-                                    </SidebarMenuItem>
-                                )
-                            }
+                    <Dialog>
+                        <SidebarGroup>
+                            <SidebarGroupLabel>Playground</SidebarGroupLabel>
+                            <SidebarMenu>
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton asChild>
+                                        <Link href={'/intelligence/'}>
+                                            <PencilLine />
+                                            New Chat
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                                <SidebarMenuItem>
+                                    <SearchChats />
+                                </SidebarMenuItem>
+                                <SidebarMenuItem>
+                                    <SidebarMenuButton asChild>
+                                        <Link href={'/intelligence/library'}>
+                                            <GalleryVerticalEnd />
+                                            Library
+                                        </Link>
+                                    </SidebarMenuButton>
+                                </SidebarMenuItem>
+                            </SidebarMenu>
+                        </SidebarGroup>
+                        <SidebarGroup className='group-data-[collapsible=icon]:hidden'>
+                            <SidebarGroupLabel>Chat History</SidebarGroupLabel>
+                            <SidebarMenu>
+                                {
+                                    isError && (
+                                        <SidebarMenuItem>
+                                            <Alert variant={'destructive'}>
+                                                <AlertCircle />
+                                                <p>Something went wrong</p>
+                                                <ul className='text-xs list-inside text-nowrap list-disc mt-1'>
+                                                    <li className=''>Check your network</li>
+                                                    <li>Make sure you are logged in!</li>
+                                                </ul>
+                                            </Alert>
+                                        </SidebarMenuItem>
+                                    )
+                                }
+                                {
+                                    isLoading && (
+                                        <SidebarMenuItem>
+                                            <SidebarMenuButton className=''>
+                                                <Loader className='animate-spin' />
+                                            </SidebarMenuButton>
+                                        </SidebarMenuItem>
+                                    )
+                                }
+                                {
+                                    chats ? (
+                                        <ChatItem chats={chats} />
+                                    ) : (
+                                        <SidebarMenuItem>
+                                            <SidebarMenuButton disabled variant={'outline'} className='hover:bg-none bg-transparent font-semibold text-muted-foreground'>
+                                                No Chats found
+                                            </SidebarMenuButton>
+                                        </SidebarMenuItem>
+                                    )
+                                }
 
-                        </SidebarMenu>
-                    </SidebarGroup>
-                    <AlertDialogContent>
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                                This action cannot be undone. This will permanently remove this chat from your account.
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction>Delete</AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
+                            </SidebarMenu>
+                        </SidebarGroup>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    This action cannot be undone. This will permanently remove this chat from your account.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction className='bg-destructive' onClick={() => handleDelete(chatId)}>
+                                    Delete
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                        <DialogContent>
+                            <DialogHeader>
+                                Rename
+                            </DialogHeader>
+                            <div className='grid'>
+                                <Input value={slug} onChange={(e) => setSlug(e.target.value)} placeholder='Chat name cannot be empty' />
+                            </div>
+
+                            <DialogFooter>
+                                <DialogClose asChild>
+                                    <Button variant={'secondary'}>
+                                        Cancel
+                                    </Button>
+                                </DialogClose>
+                                <DialogClose asChild>
+                                    <Button onClick={() => onSubmit(slug, chatId)}>
+                                        Rename
+                                    </Button>
+                                </DialogClose>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
                 </AlertDialog>
             </SidebarContent>
             <SidebarFooter>
@@ -252,9 +328,7 @@ interface MoreChatActionTypes {
 const ChatItem = ({ chats }: MoreChatActionTypes) => {
     const router = useRouter()
     const { id } = useParams()
-
-
-    console.log(id)
+    const { setSlug, setChatId } = useSidebar()
 
     return (
         chats.map((chat) => (
@@ -272,12 +346,22 @@ const ChatItem = ({ chats }: MoreChatActionTypes) => {
                             </div>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
+                            <DialogTrigger asChild onClick={() => {
+                                setSlug(chat.slug ?? "")
+                                setChatId(chat.id)
+                            }}>
+                                <DropdownMenuItem>
+                                    <Pencil />
+                                    Rename
+                                </DropdownMenuItem>
+                            </DialogTrigger>
+                            <DropdownMenuSeparator />
                             <DropdownMenuItem>
                                 <Pin />
                                 Pin this chat
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <AlertDialogTrigger asChild>
+                            <AlertDialogTrigger onClick={() => setChatId(chat.id)} asChild>
                                 <DropdownMenuItem variant='destructive'>
                                     <Trash />
                                     Delete

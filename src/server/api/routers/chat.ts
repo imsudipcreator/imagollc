@@ -50,4 +50,40 @@ export const chatRouter = createTRPCRouter({
 
     return chat.id;
   }),
+  updateOne: protectedProcedure
+    .input(
+      z.object({
+        slug: z.string(),
+        chatId: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      await db.chat.update({
+        data: {
+          slug: input.slug,
+        },
+        where: {
+          id: input.chatId,
+          userId: ctx.userId,
+        },
+      });
+
+      return "Chat slug updated successfully.";
+    }),
+  deleteOne: protectedProcedure
+    .input(
+      z.object({
+        chatId: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      await db.chat.delete({
+        where: {
+          id: input.chatId,
+          userId: ctx.userId,
+        },
+      });
+
+      return "Chat deleted successfully";
+    }),
 });

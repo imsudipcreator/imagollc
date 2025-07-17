@@ -15,6 +15,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
 import { useQueryClient } from '@tanstack/react-query';
 import { useIntelligence } from '@/contexts/intelligence-context';
+import type { Model } from '@/types/intel-types';
 
 
 const formSchema = z.object({
@@ -28,7 +29,7 @@ const InputBar = () => {
     const { user } = useUser()
     const { id } = useParams()
     const router = useRouter()
-    const { setIsGeneratingResponse, setMessages } = useIntelligence()
+    const { setIsGeneratingResponse, setMessages, selectedModel, selectedPersona } = useIntelligence()
     const queryClient = useQueryClient()
     const [selectedWebSearch, setSelectedWebSearch] = useState(false)
     const [isFocused, setIsFocused] = useState(false)
@@ -51,14 +52,14 @@ const InputBar = () => {
     })
 
     const createMessage = api.message.create.useMutation({
-        onSuccess: (data) => {
+        onSuccess: () => {
             form.reset()
             toast.success("success")
             setIsGeneratingResponse({
                 state: true,
                 log: "Generating"
             })
-            console.log("data", data)
+            // console.log("data", data)
 
         },
         onError: () => {
@@ -113,7 +114,7 @@ const InputBar = () => {
             const message = await createMessage.mutateAsync({
                 input: values.value,
                 chatId: chatId,
-                model: "imi1",
+                model: selectedModel as Model,
                 history: getHistory()
             })
 
@@ -129,7 +130,8 @@ const InputBar = () => {
             const aiMessage = await generateResponse.mutateAsync({
                 chatId,
                 prompt: values.value,
-                model: "imi1",
+                model: selectedModel as Model,
+                persona : selectedPersona,
                 history: getHistory()
             })
 

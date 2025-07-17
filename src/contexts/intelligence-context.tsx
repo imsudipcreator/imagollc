@@ -1,5 +1,6 @@
 'use client'
 
+import { models, personas } from "@/constants/models";
 import { api } from "@/trpc/react";
 import { useParams } from "next/navigation";
 import React, { createContext, useContext, useEffect, useState } from "react";
@@ -13,9 +14,16 @@ type MessageType = {
     role: "assistant" | "user"
     content: string
     userId: string
-    chatId : string
-    type : "error" | "result"
+    chatId: string
+    type: "error" | "result"
 }
+
+type SettingsType = {
+    model: string,
+    persona: string
+}
+
+
 
 interface IntelligenceContextType {
     isGeneratingResponse: { state: boolean, log: string }
@@ -24,6 +32,10 @@ interface IntelligenceContextType {
     isMessageError: boolean
     messages: MessageType[]
     setMessages: React.Dispatch<React.SetStateAction<MessageType[]>>
+    selectedModel: string
+    setSelectedModel: React.Dispatch<React.SetStateAction<string>>
+    selectedPersona: string
+    setSelectedPersona: React.Dispatch<React.SetStateAction<string>>
 }
 
 const IntelligenceContext = createContext<IntelligenceContextType | null>(null)
@@ -36,11 +48,10 @@ export const IntelligenceProvider = ({ children }: { children: React.ReactNode }
         state: false,
         log: ""
     })
-    // const { data: task } = api.task.getOne.useQuery({
-    //     chatId: id as string
-    // }, {
-    //     enabled: !!id,
-    // })
+
+    const [selectedModel, setSelectedModel] = useState<string>(models[0]?.value ?? "imi1");
+    const [selectedPersona, setSelectedPersona] = useState<string>(personas[0]?.value ?? "default");
+
 
     const { data: messagesData, isLoading: isMessageLoading, isError: isMessageError } = api.message.getMany.useQuery({
         chatId: id as string
@@ -49,10 +60,8 @@ export const IntelligenceProvider = ({ children }: { children: React.ReactNode }
         refetchOnWindowFocus: false,
         refetchOnMount: true,
         refetchOnReconnect: true,
-        enabled : !!id
+        enabled: !!id
     })
-
-    console.log(isGeneratingResponse)
 
 
     useEffect(() => {
@@ -64,7 +73,7 @@ export const IntelligenceProvider = ({ children }: { children: React.ReactNode }
     return (
         <IntelligenceContext.Provider value={{
             isGeneratingResponse, setIsGeneratingResponse, isMessageError, isMessageLoading,
-            messages, setMessages
+            messages, setMessages, selectedModel, setSelectedModel, selectedPersona, setSelectedPersona
         }}>
             {children}
         </IntelligenceContext.Provider>
