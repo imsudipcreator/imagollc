@@ -38,6 +38,13 @@ export type RouterInputs = inferRouterInputs<AppRouter>;
  */
 export type RouterOutputs = inferRouterOutputs<AppRouter>;
 
+/**
+ * Provides tRPC and React Query context to its child components.
+ *
+ * Wraps children with the necessary providers for tRPC and React Query, configuring the tRPC client with logging and HTTP batching. Ensures API requests are correctly serialized and routed.
+ *
+ * @param props - Contains the React children to be rendered within the provider context.
+ */
 export function TRPCReactProvider(props: { children: React.ReactNode }) {
   const queryClient = getQueryClient();
 
