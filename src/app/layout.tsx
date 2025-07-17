@@ -35,7 +35,7 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <div className="w-full min-h-screen flex flex-col items-center justify-start">
+              <div className="w-full min-h-svh flex flex-col items-center justify-start">
                 <NavbarWrapper />
                 {children}
                 <Toaster richColors/>
