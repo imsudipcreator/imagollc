@@ -13,7 +13,6 @@ import { api } from '@/trpc/react';
 import { toast } from 'sonner';
 import { useParams, useRouter } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
-import { useQueryClient } from '@tanstack/react-query';
 import { useIntelligence } from '@/contexts/intelligence-context';
 import type { Model } from '@/types/intel-types';
 
@@ -30,7 +29,6 @@ const InputBar = () => {
     const { id } = useParams()
     const router = useRouter()
     const { setIsGeneratingResponse, setMessages, selectedModel, selectedPersona } = useIntelligence()
-    const queryClient = useQueryClient()
     const [selectedWebSearch, setSelectedWebSearch] = useState(false)
     const [isFocused, setIsFocused] = useState(false)
     const { data: messages } = api.message.getHistoryforAi.useQuery({
