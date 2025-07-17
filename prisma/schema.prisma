@@ -7,7 +7,26 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model Users {
+enum Role {
+    user
+    assistant
+}
+
+enum Type {
+    result
+    error
+}
+
+enum Model {
+    imi1
+    imi1c
+    imi2
+    imi2c
+    imi3
+    imi4
+}
+
+model User {
     id        String   @id @unique @default(uuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -16,11 +35,13 @@ model Users {
     email         String
     developerSlug String? @unique
 
-    apps     Apps[]
-    websites Websites[]
+    apps     App[]
+    websites Website[]
+    messages Message[]
+    chats    Chat[]
 }
 
-model Apps {
+model App {
     id        Int      @id @default(autoincrement())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -32,10 +53,10 @@ model Apps {
     releaseNotes String?
     downloadLink String?
     screenshots  String[]
-    developer    Users    @relation(fields: [developerId], references: [id], onDelete: Cascade)
+    developer    User     @relation(fields: [developerId], references: [id], onDelete: Cascade)
 }
 
-model Websites {
+model Website {
     id        Int      @id @default(autoincrement())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -45,5 +66,42 @@ model Websites {
     featuredImage String
     developerId   String
     url           String
-    developer     Users  @relation(fields: [developerId], references: [id], onDelete: Cascade)
+    developer     User   @relation(fields: [developerId], references: [id], onDelete: Cascade)
+}
+
+model Message {
+    id        String   @id @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    userId  String
+    chatId  String
+    role    Role
+    type    Type
+    model   Model
+    content String
+
+    user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
+    chatSession Chat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+}
+
+model Chat {
+    id        String   @id @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    userId String
+    slug   String?
+
+    user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    messages Message[]
+}
+
+model Task {
+    id        String   @id @unique @default(uuid())
+    createdAt DateTime @default(now())
+
+    chatId String @unique
+    userId String @unique
+    status String
 }
