@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import React from 'react'
 import { SidebarProvider } from '@/components/ui/sidebar'
-import AppSidebar from './_components/app-sidebar'
-import Navbar from './_components/navbar'
-import InputBar from './_components/input-bar'
+import AppSidebar from './components/app-sidebar'
+import Navbar from './components/navbar'
+import InputBar from './components/input-bar'
 import { IntelligenceProvider } from '@/contexts/intelligence-context'
 
 export const metadata: Metadata = {

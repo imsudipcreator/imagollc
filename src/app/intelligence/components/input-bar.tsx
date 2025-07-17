@@ -45,7 +45,7 @@ const InputBar = () => {
     })
 
     const generateResponse = api.ai.generate.useMutation({
-        onSuccess: (data) => {
+        onSuccess: () => {
             console.log("response generated")
         }
     })
@@ -58,11 +58,6 @@ const InputBar = () => {
                 state: true,
                 log: "Generating"
             })
-            if (id) {
-                void queryClient.invalidateQueries(
-                    api.message.getMany.useQuery({ chatId: id as string })
-                )
-            }
             console.log("data", data)
 
         },
@@ -113,32 +108,46 @@ const InputBar = () => {
             toast.error("User id could not be found")
             return
         }
-        const chatId = await getChatId()
-        const message = await createMessage.mutateAsync({
-            input: values.value,
-            chatId: chatId,
-            model: "imi1",
-            history: getHistory()
-        })
+        try {
+            const chatId = await getChatId()
+            const message = await createMessage.mutateAsync({
+                input: values.value,
+                chatId: chatId,
+                model: "imi1",
+                history: getHistory()
+            })
 
-        setMessages((prev) => [
-            ...prev,
-            message
-        ])
-        setIsGeneratingResponse({
-            state: true,
-            log: "Thinking"
-        })
+            setMessages((prev) => [
+                ...prev,
+                message
+            ])
+            setIsGeneratingResponse({
+                state: true,
+                log: "Thinking"
+            })
 
-        const aiMessage = await generateResponse.mutateAsync({
-            chatId,
-            input: values.value,
-            model: "imi1",
-            history: getHistory()
-        })
+            const aiMessage = await generateResponse.mutateAsync({
+                chatId,
+                prompt: values.value,
+                model: "imi1",
+                history: getHistory()
+            })
+
+            setMessages((prev) => [
+                ...prev,
+                aiMessage
+            ])
+            console.log("aiMessageOnFrontend", aiMessage)
+        } catch {
+            toast.error("Something went wrong")
+        } finally {
+            setIsGeneratingResponse({
+                state: false,
+                log: ""
+            })
+        }
 
 
-        console.log("aiMessageOnFrontend", aiMessage)
     }
 
 

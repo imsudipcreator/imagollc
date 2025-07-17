@@ -36,11 +36,11 @@ export const IntelligenceProvider = ({ children }: { children: React.ReactNode }
         state: false,
         log: ""
     })
-    const { data: task } = api.task.getOne.useQuery({
-        chatId: id as string
-    }, {
-        enabled: !!id,
-    })
+    // const { data: task } = api.task.getOne.useQuery({
+    //     chatId: id as string
+    // }, {
+    //     enabled: !!id,
+    // })
 
     const { data: messagesData, isLoading: isMessageLoading, isError: isMessageError } = api.message.getMany.useQuery({
         chatId: id as string
@@ -48,9 +48,11 @@ export const IntelligenceProvider = ({ children }: { children: React.ReactNode }
         refetchInterval: 20000,
         refetchOnWindowFocus: false,
         refetchOnMount: true,
-        refetchOnReconnect: true
+        refetchOnReconnect: true,
+        enabled : !!id
     })
 
+    console.log(isGeneratingResponse)
 
 
     useEffect(() => {
@@ -59,20 +61,6 @@ export const IntelligenceProvider = ({ children }: { children: React.ReactNode }
         }
     }, [messagesData])
 
-
-    useEffect(() => {
-        if (task) {
-            setIsGeneratingResponse({
-                state: true,
-                log: task.toString()
-            })
-        } else {
-            setIsGeneratingResponse({
-                state: false,
-                log: ""
-            })
-        }
-    }, [task])
     return (
         <IntelligenceContext.Provider value={{
             isGeneratingResponse, setIsGeneratingResponse, isMessageError, isMessageLoading,
