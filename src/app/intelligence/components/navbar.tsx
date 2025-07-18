@@ -1,8 +1,8 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer'
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
@@ -10,15 +10,17 @@ import { SidebarTrigger } from '@/components/ui/sidebar'
 import { models, personas } from '@/constants/models'
 import { useIntelligence } from '@/contexts/intelligence-context'
 import { useIsMobile } from '@/hooks/use-mobile'
+import type { SettingsData } from '@/types/intel-types'
 import { PanelLeft, Settings, Shapes } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import React, { useState } from 'react'
+import TextareaAutosize from 'react-textarea-autosize';
 
 const Navbar = () => {
     const isMobile = useIsMobile()
     const [open, setOpen] = useState(false)
     const pathname = usePathname()
-
+    const { saveSettingsToLocal, resetToDefault } = useIntelligence()
 
     // useEffect(()=>{
 
@@ -57,6 +59,19 @@ const Navbar = () => {
                                     </DrawerHeader>
                                     <SettingsSection />
                                 </div>
+                                <DrawerFooter>
+                                    <DrawerClose asChild>
+                                        <Button variant={'secondary'} onClick={resetToDefault}>
+                                            Reset to default
+                                        </Button>
+                                    </DrawerClose>
+                                    <DrawerClose asChild>
+                                        <Button variant={'default'} onClick={saveSettingsToLocal}>
+                                            Save
+                                        </Button>
+                                    </DrawerClose>
+
+                                </DrawerFooter>
                             </DrawerContent>
                         </Drawer>
                     ) : (
@@ -77,6 +92,19 @@ const Navbar = () => {
                                     </DialogDescription>
                                 </DialogHeader>
                                 <SettingsSection />
+                                <DialogFooter>
+                                    <DialogClose asChild>
+                                        <Button variant={'secondary'} onClick={resetToDefault}>
+                                            Reset to default
+                                        </Button>
+                                    </DialogClose>
+                                    <DialogClose asChild>
+                                        <Button variant={'default'} onClick={saveSettingsToLocal}>
+                                            Save
+                                        </Button>
+                                    </DialogClose>
+
+                                </DialogFooter>
                             </DialogContent>
                         </Dialog>
                     )
@@ -91,7 +119,7 @@ const Navbar = () => {
 export default Navbar
 
 const SettingsSection = () => {
-    const { setSelectedModel, selectedModel, selectedPersona, setSelectedPersona} = useIntelligence()
+    const { setSelectedModel, selectedModel, selectedPersona, setSelectedPersona, customPrompt, setCustomPrompt } = useIntelligence()
 
     return (
         <section className='flex flex-col w-full pt-5 gap-6'>
@@ -146,6 +174,24 @@ const SettingsSection = () => {
                     </SelectContent>
                 </Select>
             </div>
+
+
+            <div className='grid gap-3'>
+                <Label>Custom Prompt</Label>
+                <TextareaAutosize
+                    placeholder='Add your custom prompt'
+                    value={customPrompt}
+                    onChange={(e) => setCustomPrompt(e.target.value)}
+                    minRows={5}
+                    maxRows={9}
+                    className='resize-none border border-border rounded-lg p-3'
+                />
+            </div>
+
+
+            {/* <div className='w-full flex items-center justify-end gap-3.5'>
+                
+            </div> */}
         </section>
     )
 }

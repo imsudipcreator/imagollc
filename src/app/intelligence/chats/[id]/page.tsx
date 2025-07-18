@@ -61,7 +61,7 @@ const ChatPage = () => {
                             <ContextMenuTrigger asChild>
                                 <div
                                     className={cn('rounded-2xl px-3 py-2 select-none shrink-0',
-                                        message.role === 'user' ? "max-w-[80%] ml-auto bg-muted" : "max-w-[90%] mr-auto bg-transparent"
+                                        message.role === 'user' ? "max-w-[80%] ml-auto bg-muted" : "max-w-[96%] mr-auto bg-transparent"
                                     )}>
                                     <MarkdownRender>
                                         {message.content}

@@ -2,7 +2,11 @@ import React from 'react'
 
 const Library = () => {
   return (
-    <div>Library</div>
+    <div className='flex-1'>
+      <div className='max-w-5xl h-fit overflow-y-auto flex flex-wrap'>
+        
+      </div>
+    </div>
   )
 }
 
