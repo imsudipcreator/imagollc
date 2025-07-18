@@ -44,6 +44,7 @@ type ChatType = {
 const AppSidebar = () => {
     const { slug, chatId, setSlug } = useSidebar()
     const isMobile = useIsMobile()
+    const router = useRouter()
     const { isSignedIn, user } = useUser()
     const { data: chats, isLoading, isError } = api.chat.getMany.useQuery()
     const updateSlug = api.chat.updateOne.useMutation({
@@ -102,6 +103,7 @@ const AppSidebar = () => {
                         <SidebarMenuButton
                             size="lg"
                             className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                            onClick={() => router.push('/')}
                         >
                             <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                                 <ImagoIcon className="size-4" />
