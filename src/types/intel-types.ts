@@ -25,3 +25,9 @@ export type PersonaData = {
   description: string;
   icon: LucideIcon;
 };
+
+export type SettingsData = {
+  model : Model,
+  persona : string
+  customPrompt? : string
+}

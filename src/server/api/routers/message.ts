@@ -96,4 +96,26 @@ export const messageRouter = createTRPCRouter({
 
       return message;
     }),
+  search: protectedProcedure
+    .input(
+      z.object({
+        term: z.string(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      const messages = await db.message.findMany({
+        where: {
+          userId: ctx.userId,
+          content: {
+            contains: input.term,
+            mode: "insensitive",
+          },
+        },
+        include : {
+          chatSession : true
+        }
+      });
+
+      return messages;
+    }),
 });

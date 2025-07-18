@@ -28,7 +28,7 @@ const InputBar = () => {
     const { user } = useUser()
     const { id } = useParams()
     const router = useRouter()
-    const { setIsGeneratingResponse, setMessages, selectedModel, selectedPersona } = useIntelligence()
+    const { setIsGeneratingResponse, setMessages, selectedModel, selectedPersona, customPrompt } = useIntelligence()
     const [selectedWebSearch, setSelectedWebSearch] = useState(false)
     const [isFocused, setIsFocused] = useState(false)
     const { data: messages } = api.message.getHistoryforAi.useQuery({
@@ -130,7 +130,8 @@ const InputBar = () => {
                 prompt: values.value,
                 model: selectedModel as Model,
                 persona : selectedPersona,
-                history: getHistory()
+                history: getHistory(),
+                customPrompt
             })
 
             setMessages((prev) => [
