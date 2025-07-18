@@ -35,10 +35,12 @@ model User {
     email         String
     developerSlug String? @unique
 
-    apps     App[]
-    websites Website[]
-    messages Message[]
-    chats    Chat[]
+    apps               App[]
+    websites           Website[]
+    messages           Message[]
+    chats              Chat[]
+    communityPosts     CommunityPost[]
+    communityPostLikes CommunityPostLike[]
 }
 
 model App {
@@ -104,4 +106,27 @@ model Task {
     chatId String @unique
     userId String @unique
     status String
+}
+
+model CommunityPost {
+    id        String   @id @unique @default(uuid())
+    createdAt DateTime @default(now())
+
+    imageUrl String
+    userId   String
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    likes CommunityPostLike[]
+}
+
+model CommunityPostLike {
+    id     Int    @id @default(autoincrement())
+    postId String
+    userId String
+
+    post CommunityPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+    user User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([postId, userId])
 }
