@@ -26,6 +26,11 @@ enum Model {
     imi4
 }
 
+enum Status {
+    generating
+    generated
+}
+
 model User {
     id        String   @id @unique @default(uuid())
     createdAt DateTime @default(now())
@@ -108,12 +113,22 @@ model Task {
     status String
 }
 
+model PostTask {
+    id        String   @id @unique @default(uuid())
+    createdAt DateTime @default(now())
+
+    userId String
+    status Status
+}
+
 model CommunityPost {
     id        String   @id @unique @default(uuid())
     createdAt DateTime @default(now())
 
     imageUrl String
     userId   String
+    prompt   String
+    public   Boolean @default(true)
 
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 

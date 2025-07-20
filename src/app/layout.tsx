@@ -45,7 +45,7 @@ export default function RootLayout({
               <div className="w-full min-h-svh flex flex-col items-center justify-start">
                 <NavbarWrapper />
                 {children}
-                <Toaster richColors/>
+                <Toaster richColors position="top-center"/>
                 <FooterWrapper />
               </div>
             </ThemeProvider>

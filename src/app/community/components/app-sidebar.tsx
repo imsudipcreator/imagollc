@@ -15,7 +15,7 @@ const applicationItems = [
     { label: "Explore", icon: Origami, href: '/community' },
     { label: "Top", icon: Trophy, href: '/community/top' },
     { label: "Likes", icon: ThumbsUp, href: '/community/likes' },
-    { label: "Create", icon: Pen, href: '/community/library' },
+    { label: "Create", icon: Pen, href: '/community/create' },
 ]
 
 const AppSidebar = () => {
@@ -31,7 +31,7 @@ const AppSidebar = () => {
             <SidebarHeader>
                 <Button variant={'ghost'} size={'lg'} className='flex items-center justify-center gap-1.5'>
                     <ImagoIcon />
-                    <span className='font-semibold text-xl'>Community</span>
+                    <Link href={'/'} className='font-semibold text-xl'>Community</Link>
                 </Button>
             </SidebarHeader>
             <SidebarContent>

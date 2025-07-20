@@ -3,6 +3,7 @@ import { messageRouter } from "./routers/message";
 import { chatRouter } from "./routers/chat";
 import { taskRouter } from "./routers/task-router";
 import { aiRouter } from "./routers/ai";
+import { communityPostRouter } from "./routers/community-post";
 
 /**
  * This is the primary router for your server.
@@ -14,6 +15,7 @@ export const appRouter = createTRPCRouter({
   chat: chatRouter,
   task: taskRouter,
   ai: aiRouter,
+  communityPost : communityPostRouter
 });
 
 // export type definition of API

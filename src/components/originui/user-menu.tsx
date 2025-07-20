@@ -54,7 +54,7 @@ export default function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size={'sm'} className="h-auto p-0 hover:bg-transparent rounded-full flex items-center overflow-clip size-7 bg-amber-700 justify-center">
+        <Button variant="ghost" size={'sm'} className="h-auto p-0 hover:bg-transparent rounded-full flex items-center overflow-clip size-6  justify-center">
           <Avatar>
             <AvatarImage className="object-cover" src={user?.hasImage ? user?.imageUrl : undefined} alt="Profile image" />
             <AvatarFallback className="text-foreground">{shortName}</AvatarFallback>

@@ -10,7 +10,7 @@ import React from 'react'
 const applicationItems = [
     { label: "Explore", icon: Origami, href: '/community' },
     { label: "Library", icon: GalleryVerticalEnd, href: '/community/library' },
-    { label: "Create", icon: Pen, href: '/community/library' },
+    { label: "Create", icon: Pen, href: '/community/create' },
     { label: "Top", icon: Trophy, href: '/community/top' },
     { label: "Likes", icon: ThumbsUp, href: '/community/likes' },
 ]
@@ -27,7 +27,7 @@ const Tabbar = () => {
             {
                 applicationItems.map((item) =>(
                     <Link href={item.href} key={item.label} className={cn(' px-2 py-1.5 rounded-md',
-                        pathname === item.href && 'bg-background/80'
+                        pathname === item.href && 'bg-foreground/10'
                     )}>
                         <item.icon/>
                     </Link>

@@ -11,7 +11,7 @@ export const taskRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      await db.task.create({
+      const task = await db.task.create({
         data: {
           id: crypto.randomUUID(),
           chatId: input.chatId,
@@ -19,6 +19,8 @@ export const taskRouter = createTRPCRouter({
           status: input.status,
         },
       });
+
+      return task;
     }),
   deleteOne: publicProcedure
     .input(
@@ -34,20 +36,42 @@ export const taskRouter = createTRPCRouter({
       });
     }),
 
-  getOne: publicProcedure
+  getOne: protectedProcedure
     .input(
       z.object({
         chatId: z.string(),
       }),
     )
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       const task = await db.task.findUnique({
         where: {
           chatId: input.chatId,
+          userId: ctx.userId,
         },
       });
-      
 
       return task?.status;
     }),
+
+  createImageTask: protectedProcedure.mutation(async ({ ctx }) => {
+    const task = await db.postTask.create({
+      data: {
+        userId: ctx.userId,
+        status: "generating",
+        id: crypto.randomUUID(),
+      },
+    });
+
+    return task;
+  }),
+  getImageTasks : protectedProcedure.query(async ({ ctx }) =>  {
+    const tasks  = await db.postTask.findMany({
+      where : {
+        userId : ctx.userId,
+        status : "generating"
+      }
+    })
+
+    return tasks
+  })
 });
