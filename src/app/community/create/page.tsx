@@ -3,12 +3,11 @@
 import React, { useEffect, useState } from 'react'
 import InputBar from '../components/input-bar'
 import { api } from '@/trpc/react'
-import { ArrowRight, Copy, Loader } from 'lucide-react'
-import Image from 'next/image'
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
+import { ArrowRight, Loader } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useCommunity } from '../contexts/community-context'
 import { useRouter } from 'next/navigation'
+import { PostCard } from '../components/post-card'
 
 const CreatePage = () => {
   const router = useRouter()
@@ -18,6 +17,7 @@ const CreatePage = () => {
   })
   const { isPending, setIsPending } = useCommunity()
   const [counter, setCounter] = useState(0)
+
 
 
 
@@ -72,39 +72,33 @@ const CreatePage = () => {
 
         <div className='w-full min-h-0 flex flex-col  gap-2.5 shrink-0'>
           <h1 className='font-semibold text-lg'>Recent Images</h1>
+          {
+            posts && posts.length === 0 && (
+              <div className='w-full min-h-20 flex items-center justify-center text-muted-foreground text-center'>
+                No images found. Create one
+              </div>
+            )
+          }
           <div className='grid grid-cols-2 md:grid-cols-3  w-full h-full gap-1'>
             {
               posts?.map((post) => (
-                <Dialog key={post.id}>
-                  <DialogTrigger asChild>
-                    <div className='w-full h-60 lg:h-96 bg-transparent relative overflow-clip rounded-lg'>
-                      <Image src={post.imageUrl} alt="image" className='object-cover h-full w-full' width={300} height={500} />
-                    </div>
-                  </DialogTrigger>
-                  <DialogContent className='max-w-7xl bg-transparent p-0 border-0 md:w-full w-[90%]'>
-                    <div className="relative w-full overflow-clip rounded-md bg-transparent">
-                      <Image src={post.imageUrl} className='h-full w-full object-contain' width={300} height={300} alt='image' />
-                      <div className='w-full bg-transparent flex items-center absolute bottom-0 justify-between px-4 py-3'>
-                        <Button variant={'secondary'} className='cursor-pointer rounded-full flex items-center justify-center bg-background/60 backdrop-blur-lg tex-sm'>
-                          <Copy />
-                          Copy prompt
-                        </Button>
-                      </div>
-                    </div>
-                  </DialogContent>
-                </Dialog>
+                <PostCard key={post.id} imageUrl={post.imageUrl} isPublished={post.public} prompt={post.prompt} postId={post.id} />
               ))
             }
           </div>
 
         </div>
+        {
+          posts && posts?.length > 5 && (
+            <div className='w-full min-h-0 shrink-0 flex items-center justify-center pt-4 pb-14'>
+              <Button variant={'secondary'} onClick={() => router.push("/community/library")}>
+                View all
+                <ArrowRight />
+              </Button>
+            </div>
+          )
+        }
 
-        <div className='w-full min-h-0 shrink-0 flex items-center justify-center pt-4 pb-14'>
-          <Button variant={'secondary'} onClick={() => router.push("/community/library")}>
-            View all
-            <ArrowRight />
-          </Button>
-        </div>
       </div>
 
       <InputBar />

@@ -1,7 +1,7 @@
 import { Form, FormField } from '@/components/ui/form'
 import TextareaAutosize from 'react-textarea-autosize';
 import { cn } from '@/lib/utils'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import z from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -111,7 +111,7 @@ const InputBar = () => {
                                     <DropdownMenuGroup className=''>
                                         {
                                             prompts.map((prompt) => (
-                                                <DropdownMenuItem key={prompt} title={prompt} className='truncate w-full max-w-[260px]' onClick={() => form.setValue("value", prompt)}>
+                                                <DropdownMenuItem key={prompt} title={prompt} className='truncate w-full max-w-[260px]' onClick={() => form.setValue("value", prompt, { shouldValidate : true})}>
                                                     <span>
                                                         {prompt}
                                                     </span>
