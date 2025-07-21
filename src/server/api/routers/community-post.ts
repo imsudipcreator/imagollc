@@ -1,5 +1,5 @@
 import z from "zod";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure } from "../trpc";
 import { inngest } from "@/inngest/client";
 import { db } from "@/server/db";
 
@@ -22,24 +22,24 @@ export const communityPostRouter = createTRPCRouter({
     }),
 
   getPosts: protectedProcedure
-  .input(
-    z.object({
-      limit : z.number().optional()
-    })
-  )
-  .query(async ({ ctx, input }) => {
-    const posts = await db.communityPost.findMany({
-      take : input.limit ?? 5,
-      where: {
-        userId: ctx.userId,
-      },
-      orderBy : {
-        createdAt : "desc"
-      }
-    });
+    .input(
+      z.object({
+        limit: z.number().optional(),
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const posts = await db.communityPost.findMany({
+        take: input.limit ?? 5,
+        where: {
+          userId: ctx.userId,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
 
-    return posts;
-  }),
+      return posts;
+    }),
 
   getAllPosts: protectedProcedure
     .input(
@@ -74,7 +74,7 @@ export const communityPostRouter = createTRPCRouter({
 
       return {
         posts,
-        nextCursor
+        nextCursor,
       };
     }),
   likePost: protectedProcedure
@@ -96,7 +96,13 @@ export const communityPostRouter = createTRPCRouter({
           where: { id: existingLike.id },
         });
 
-        return { liked: false };
+        const data = await db.communityPostLike.findMany({
+          where: {
+            postId,
+          },
+        });
+
+        return { liked: false, likesLength: data.length };
       } else {
         await db.communityPostLike.create({
           data: {
@@ -105,7 +111,54 @@ export const communityPostRouter = createTRPCRouter({
           },
         });
 
-        return { liked: true };
+        const data = await db.communityPostLike.findMany({
+          where: {
+            postId,
+          },
+        });
+
+        return { liked: true, likesLength: data.length };
+      }
+    }),
+
+  togglePublishPost: protectedProcedure
+    .input(
+      z.object({
+        postId: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const isPublic = await db.communityPost.findUnique({
+        where: {
+          id: input.postId,
+          userId: ctx.userId,
+        },
+        select: {
+          public: true,
+        },
+      });
+
+      if (isPublic?.public) {
+        await db.communityPost.update({
+          where: {
+            id: input.postId,
+          },
+          data: {
+            public: false,
+          },
+        });
+
+        return { public: false };
+      } else {
+        await db.communityPost.update({
+          where: {
+            id: input.postId,
+          },
+          data: {
+            public: true,
+          },
+        });
+        return { public: true };
       }
     }),
 });
