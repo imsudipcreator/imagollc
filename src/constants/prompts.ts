@@ -1,0 +1,17 @@
+export const prompts = [
+  "A futuristic cyberpunk city at night, glowing neon lights, flying cars",
+  "A cozy cottage in the woods during autumn, detailed and realistic",
+  "A cat astronaut floating in space, surreal and dreamy",
+  "A mystical forest with glowing plants and magical creatures",
+  "A steampunk robot drinking tea in a Victorian-style room",
+  "A dragon made of fire and smoke, roaring in the sky",
+  "A fantasy castle on top of a floating island above clouds",
+  "A samurai standing in the rain under cherry blossoms",
+  "A digital portrait of a person made entirely of circuit patterns",
+  "An underwater city with glowing jellyfish and futuristic buildings",
+  "A haunted library with floating books and ghostly lights",
+  "A peaceful mountain landscape at sunrise, hyperrealistic",
+  "A group of animals having a tea party in the forest",
+  "An AI core room with holograms and wires everywhere",
+  "A glitchy 3D-rendered anime character in a digital world",
+];
