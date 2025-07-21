@@ -2,24 +2,13 @@
 
 import UserMenu from '@/components/originui/user-menu'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { useIsMobile } from '@/hooks/use-mobile'
 import { cn } from '@/lib/utils'
 import { api } from '@/trpc/react'
 import { useUser } from '@clerk/nextjs'
-import { Copy, Filter, Grid2X2, Loader, Rows3, ThumbsUp } from 'lucide-react'
-import Image from 'next/image'
+import { Filter, Grid2X2, Loader, Rows3 } from 'lucide-react'
 import React, { useEffect, useRef, useState } from 'react'
-import { toast } from 'sonner'
-
-
-const heights = ["h-96", "h-[30rem]", "h-64", "h-80"];
-
-
-const randomHeight = () => {
-  return heights[Math.floor(Math.random() * heights.length)]
-}
+import { ExplorePostCard } from './components/post-card'
 
 
 const columns = [
@@ -29,7 +18,6 @@ const columns = [
 
 const CommunityPage = () => {
   const { user } = useUser()
-  const utils = api.useUtils()
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const [selectedColumn, setSelectedColumn] = useState(columns[0]?.value ?? "column-1 lg:columns-2")
   const { data, isLoading: postFetching, fetchNextPage, hasNextPage, isFetchingNextPage } = api.communityPost.getAllPosts.useInfiniteQuery(
@@ -41,15 +29,6 @@ const CommunityPage = () => {
     }
   )
   const posts = data?.pages.flatMap(page => page.posts) ?? []
-  const likePost = api.communityPost.likePost.useMutation({
-    onSuccess: () => {
-      toast.success("Liked the post")
-      // void utils.communityPost.getAllPosts.invalidate()
-    },
-    onError: () => {
-      toast.error("something went wrong while liking the post")
-    }
-  })
 
 
   useEffect(() => {
@@ -103,38 +82,15 @@ const CommunityPage = () => {
       )}>
         {
           posts?.map((post) => (
-            <Dialog key={post.id}>
-              <DialogTrigger asChild>
-                <div className={cn('w-full bg-transparent relative overflow-clip rounded-lg ',
-                  randomHeight()
-                )}>
-                  <Image src={post.imageUrl} alt="image" className='object-cover h-full w-full' width={300} height={500} />
-                  <div className='w-full bg-transparent absolute flex items-center justify-between p-2 bottom-0 text-white '>
-                    <p className='md:text-base text-sm'>{post.user.fullname}</p>
-                    <div className='flex items-center gap-2'>
-                      <Button onClick={() => likePost.mutateAsync({ postId: post.id })} variant={'ghost'} size={'sm'} className='rounded-full'>
-                        {post.likes.some(like => like.userId === user?.id) ? <ThumbsUp className='fill-white' /> : <ThumbsUp />}
-                        <span>{post.likes.length}</span>
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </DialogTrigger>
-              <DialogContent className='max-w-7xl bg-transparent p-0 border-0 md:w-full w-[90%]'>
-                <DialogTitle className='sr-only'>
-                  Image
-                </DialogTitle>
-                <div className="relative w-full overflow-clip rounded-md bg-transparent">
-                  <Image src={post.imageUrl} className='h-full w-full object-contain' width={300} height={300} alt='image' />
-                  <div className='w-full bg-transparent flex items-center absolute bottom-0 justify-between px-4 py-3'>
-                    <Button variant={'secondary'} className='cursor-pointer rounded-full flex items-center justify-center bg-background/60 backdrop-blur-lg tex-sm'>
-                      <Copy />
-                      Copy prompt
-                    </Button>
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
+            <ExplorePostCard
+              key={post.id}
+              fullname={post.user.fullname}
+              liked={post.likes.some(like => like.userId === user?.id)}
+              imageUrl={post.imageUrl}
+              likesLength={post.likes.length}
+              postId={post.id}
+              prompt={post.prompt}
+            />
           ))
         }
       </div>
@@ -161,7 +117,6 @@ interface LayoutSelectProps {
 }
 
 const LayoutSelect = ({ selectedColumn, setSelectedColumn }: LayoutSelectProps) => {
-  const isMobile = useIsMobile()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
