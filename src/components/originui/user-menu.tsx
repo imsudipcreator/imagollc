@@ -1,9 +1,11 @@
 import {
   BoltIcon,
   BookOpenIcon,
+  House,
   Layers2Icon,
   LogOutIcon,
   PinIcon,
+  User,
   UserPenIcon,
 } from "lucide-react"
 
@@ -25,8 +27,10 @@ import {
 import { SignOutButton, useUser } from "@clerk/nextjs"
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
+import { useRouter } from "next/navigation"
 
 export default function UserMenu() {
+  const router = useRouter()
   const { user } = useUser()
   const [shortName, setShortName] = useState("NN")
 
@@ -40,7 +44,7 @@ export default function UserMenu() {
   useEffect(() => {
     const firstName = user?.firstName
     const lastName = user?.lastName
-    if (firstName && lastName) {
+    if (user && firstName && lastName) {
       const result = shortenedUsername(firstName, lastName)
       setShortName(result)
     } else {
@@ -72,17 +76,17 @@ export default function UserMenu() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <BoltIcon size={16} className="opacity-60" aria-hidden="true" />
-            <span>Profile</span>
+          <DropdownMenuItem onClick={() => router.push("/")}>
+            <House size={16} className="opacity-60" aria-hidden="true" />
+            <span>Home</span>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Layers2Icon size={16} className="opacity-60" aria-hidden="true" />
             <span>Gallery</span>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <BookOpenIcon size={16} className="opacity-60" aria-hidden="true" />
-            <span>Option 3</span>
+          <DropdownMenuItem onClick={() => router.push('/account')}>
+            <User size={16} className="opacity-60" aria-hidden="true" />
+            <span>Account</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
