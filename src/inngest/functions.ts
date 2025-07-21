@@ -69,3 +69,52 @@ export const callIMI = inngest.createFunction(
     });
   },
 );
+
+export const createCommunityPost = inngest.createFunction(
+  { id: "create-community-post", retries: 1 },
+  { event: "create-community-post/run" },
+  async ({ event, step }) => {
+    const { taskId, prompt, userId } = event.data as {
+      taskId: string;
+      prompt: string;
+      userId: string;
+    };
+    console.log("running inngest function");
+    const imageGenResponse = step.run("generate-image", async () => {
+      const response = await fetch(
+        `https://tool-user-ai.onrender.com/generate/image?input=${encodeURIComponent(prompt)}`,
+        {
+          method: "POST",
+        },
+      );
+
+      if (!response.ok) throw new Error("Failed to generate your image");
+
+      return (await response.json()) as {
+        type: "error" | "image";
+        image_url: string;
+        log: string;
+      };
+    });
+
+    const { image_url } = await imageGenResponse;
+
+    const createdPost = await db.communityPost.create({
+      data: {
+        imageUrl: image_url,
+        prompt,
+        id: crypto.randomUUID(),
+        userId,
+      },
+    });
+
+    await db.postTask.delete({
+      where: {
+        userId,
+        id: taskId,
+      },
+    });
+
+    return createdPost;
+  },
+);

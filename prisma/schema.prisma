@@ -26,6 +26,11 @@ enum Model {
     imi4
 }
 
+enum Status {
+    generating
+    generated
+}
+
 model User {
     id        String   @id @unique @default(uuid())
     createdAt DateTime @default(now())
@@ -35,10 +40,12 @@ model User {
     email         String
     developerSlug String? @unique
 
-    apps     App[]
-    websites Website[]
-    messages Message[]
-    chats    Chat[]
+    apps               App[]
+    websites           Website[]
+    messages           Message[]
+    chats              Chat[]
+    communityPosts     CommunityPost[]
+    communityPostLikes CommunityPostLike[]
 }
 
 model App {
@@ -104,4 +111,37 @@ model Task {
     chatId String @unique
     userId String @unique
     status String
+}
+
+model PostTask {
+    id        String   @id @unique @default(uuid())
+    createdAt DateTime @default(now())
+
+    userId String
+    status Status
+}
+
+model CommunityPost {
+    id        String   @id @unique @default(uuid())
+    createdAt DateTime @default(now())
+
+    imageUrl String
+    userId   String
+    prompt   String
+    public   Boolean @default(true)
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    likes CommunityPostLike[]
+}
+
+model CommunityPostLike {
+    id     Int    @id @default(autoincrement())
+    postId String
+    userId String
+
+    post CommunityPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+    user User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([postId, userId])
 }
