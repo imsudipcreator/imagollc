@@ -8,6 +8,7 @@ import MarkdownRender from '../../components/markdown-render'
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuShortcut, ContextMenuTrigger } from '@/components/ui/context-menu'
 import { Loader, TriangleAlert } from 'lucide-react'
 import { useIntelligence } from '@/contexts/intelligence-context'
+import { copyTextToClipboard } from '@/utils/copy-to-clipboard'
 
 
 
@@ -70,7 +71,7 @@ const ChatPage = () => {
                                 </div>
                             </ContextMenuTrigger>
                             <ContextMenuContent className='w-52'>
-                                <ContextMenuItem>
+                                <ContextMenuItem onClick={() => copyTextToClipboard(message.content, "Copied this text to your clipboard")}>
                                     Copy
                                     <ContextMenuShortcut>⌘ Shift C</ContextMenuShortcut>
                                 </ContextMenuItem>
