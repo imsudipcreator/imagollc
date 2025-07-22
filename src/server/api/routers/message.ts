@@ -16,13 +16,12 @@ export const messageRouter = createTRPCRouter({
           userId: ctx.userId,
         },
         orderBy: {
-          createdAt: "asc",
+          createdAt: "desc",
         },
         select: {
           role: true,
           content: true,
         },
-        skip: 1,
         take: 10,
       });
 
@@ -111,9 +110,9 @@ export const messageRouter = createTRPCRouter({
             mode: "insensitive",
           },
         },
-        include : {
-          chatSession : true
-        }
+        include: {
+          chatSession: true,
+        },
       });
 
       return messages;

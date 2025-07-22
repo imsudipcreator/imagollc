@@ -31,11 +31,12 @@ const InputBar = () => {
     const { setIsGeneratingResponse, setMessages, selectedModel, selectedPersona, customPrompt } = useIntelligence()
     const [selectedWebSearch, setSelectedWebSearch] = useState(false)
     const [isFocused, setIsFocused] = useState(false)
-    const { data: messages } = api.message.getHistoryforAi.useQuery({
+    const { data: messages, refetch } = api.message.getHistoryforAi.useQuery({
         chatId: id as string
     }, {
         enabled: !!id
     })
+    console.log(messages)
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -45,7 +46,8 @@ const InputBar = () => {
 
     const generateResponse = api.ai.generate.useMutation({
         onSuccess: () => {
-            console.log("response generated")
+            // console.log("response generated")
+            void refetch()
         }
     })
 
@@ -138,7 +140,7 @@ const InputBar = () => {
                 ...prev,
                 aiMessage
             ])
-            console.log("aiMessageOnFrontend", aiMessage)
+            // console.log("aiMessageOnFrontend", aiMessage)
         } catch {
             toast.error("Something went wrong")
         } finally {
