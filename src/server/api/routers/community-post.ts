@@ -275,4 +275,22 @@ export const communityPostRouter = createTRPCRouter({
         return { public: true };
       }
     }),
+
+  uploadToCommunity: protectedProcedure
+    .input(
+      z.object({
+        imageUrl: z.string(),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const { imageUrl } = input;
+      await db.communityPost.create({
+        data: {
+          id: crypto.randomUUID(),
+          imageUrl,
+          prompt: "Unknown. This image was generated from intelligence.",
+          userId: ctx.userId,
+        },
+      });
+    }),
 });
