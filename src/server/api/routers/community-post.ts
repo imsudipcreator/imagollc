@@ -77,6 +77,120 @@ export const communityPostRouter = createTRPCRouter({
         nextCursor,
       };
     }),
+  getTopPosts: protectedProcedure
+    .input(
+      z.object({
+        limit: z.number(),
+        cursor: z.string().nullish(),
+      }),
+    )
+    .query(async ({ input }) => {
+      const { cursor, limit } = input;
+      const posts = await db.communityPost.findMany({
+        take: limit + 1,
+        cursor: cursor ? { id: cursor } : undefined,
+        where: {
+          public: true,
+        },
+        include: {
+          user: true,
+          likes: true,
+        },
+        orderBy: {
+          likes: {
+            _count: "desc",
+          },
+        },
+      });
+
+      let nextCursor: typeof cursor | undefined = undefined;
+
+      if (posts.length > limit) {
+        const nextPost = posts.pop();
+        nextCursor = nextPost?.id;
+      }
+
+      return {
+        posts,
+        nextCursor,
+      };
+    }),
+  getLikedPosts: protectedProcedure
+    .input(
+      z.object({
+        limit: z.number(),
+        cursor: z.string().nullish(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      const { limit, cursor } = input;
+      const posts = await db.communityPost.findMany({
+        take: limit + 1,
+        cursor: cursor ? { id: cursor } : undefined,
+        where: {
+          likes: {
+            some: {
+              userId: ctx.userId,
+            },
+          },
+        },
+        include: {
+          user: true,
+          likes: true,
+        },
+        orderBy: {
+          likes: {
+            _count: "desc",
+          },
+        },
+      });
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (posts.length > limit) {
+        const nextPost = posts.pop();
+        nextCursor = nextPost?.id;
+      }
+
+      return {
+        posts,
+        nextCursor,
+      };
+    }),
+  getUserPosts: protectedProcedure
+    .input(
+      z.object({
+        limit: z.number(),
+        cursor: z.string().nullish(),
+      }),
+    )
+    .query(async ({ input, ctx }) => {
+      const { limit, cursor } = input;
+      const posts = await db.communityPost.findMany({
+        take: limit + 1,
+        cursor: cursor ? { id: cursor } : undefined,
+        where: {
+          userId: ctx.userId,
+        },
+        include: {
+          user: true,
+          likes: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (posts.length > limit) {
+        const nextPost = posts.pop();
+        nextCursor = nextPost?.id;
+      }
+
+      return {
+        posts,
+        nextCursor,
+      };
+    }),
   likePost: protectedProcedure
     .input(
       z.object({

@@ -2,12 +2,12 @@
 
 import ImagoIcon from '@/components/icons/imago-icon'
 import { Button } from '@/components/ui/button'
-import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
+import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { cn } from '@/lib/utils'
-import { Origami, Pen, ThumbsUp, Trophy } from 'lucide-react'
+import { ArrowUpRight, GalleryVerticalEnd, Origami, Pen, ThumbsUp, Trophy } from 'lucide-react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import React from 'react'
 
 
@@ -15,12 +15,14 @@ const applicationItems = [
     { label: "Explore", icon: Origami, href: '/community' },
     { label: "Top", icon: Trophy, href: '/community/top' },
     { label: "Likes", icon: ThumbsUp, href: '/community/likes' },
+    { label: "Library", icon: GalleryVerticalEnd, href: '/community/library' },
     { label: "Create", icon: Pen, href: '/community/create' },
 ]
 
 const AppSidebar = () => {
     const pathName = usePathname()
     const isMobile = useIsMobile()
+    const router = useRouter()
 
 
     if (isMobile) {
@@ -55,6 +57,16 @@ const AppSidebar = () => {
                     </SidebarGroupContent>
                 </SidebarGroup>
             </SidebarContent>
+            <SidebarFooter>
+                <Button onClick={() => router.push('/')} variant={'outline'} className='cursor-pointer'>
+                    Go to home
+                    <ArrowUpRight />
+                </Button>
+                <Button onClick={() => router.push('/intelligence')} className='cursor-pointer'>
+                    Visit intelligence
+                    <ArrowUpRight />
+                </Button>
+            </SidebarFooter>
         </Sidebar>
     )
 }
