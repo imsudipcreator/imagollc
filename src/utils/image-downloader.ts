@@ -1,4 +1,4 @@
-export const downloadImage = (imageUrl: string) => {
+export const downloadImage = (imageUrl: string, watermarkUrl = "https://res.cloudinary.com/sudipbackend/image/upload/v1753165942/imago-logo-white_gmapdf.webp") => {
   const img = new Image();
   img.crossOrigin = "anonymous";
   img.src = imageUrl;
@@ -11,7 +11,7 @@ export const downloadImage = (imageUrl: string) => {
 
     const watermark = new Image();
     watermark.crossOrigin = "anonymous";
-    watermark.src = "https://res.cloudinary.com/sudipbackend/image/upload/v1753113462/imago-logo_1_vdikq5.webp";
+    watermark.src = watermarkUrl;
     watermark.onload = () => {
       const scale = 0.1;
       const watermarkWidth = canvas.width * scale;
