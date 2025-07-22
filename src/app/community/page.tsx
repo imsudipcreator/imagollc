@@ -2,24 +2,18 @@
 
 import UserMenu from '@/components/originui/user-menu'
 import { Button } from '@/components/ui/button'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
 import { api } from '@/trpc/react'
 import { useUser } from '@clerk/nextjs'
-import { Filter, Grid2X2, Loader, Rows3 } from 'lucide-react'
+import { Filter, Loader } from 'lucide-react'
 import React, { useEffect, useRef, useState } from 'react'
 import { ExplorePostCard } from './components/post-card'
-
-
-const columns = [
-  { icon: <Rows3 />, value: "column-1 lg:columns-2", placeholder: "List" },
-  { icon: <Grid2X2 />, value: "columns-2 lg:columns-3", placeholder: "Grid" },
-]
+import { columns, LayoutSelect } from './components/layout-select'
 
 const CommunityPage = () => {
   const { user } = useUser()
   const loadMoreRef = useRef<HTMLDivElement>(null)
-  const [selectedColumn, setSelectedColumn] = useState(columns[0]?.value ?? "column-1 lg:columns-2")
+  const [selectedColumn, setSelectedColumn] = useState(columns[0]?.value ?? "column-1 lg:columns-2 2xl:columns-3")
   const { data, isLoading: postFetching, fetchNextPage, hasNextPage, isFetchingNextPage } = api.communityPost.getAllPosts.useInfiniteQuery(
     {
       limit: 6
@@ -107,37 +101,3 @@ const CommunityPage = () => {
 }
 
 export default CommunityPage
-
-
-
-
-interface LayoutSelectProps {
-  selectedColumn: string
-  setSelectedColumn: React.Dispatch<React.SetStateAction<string>>
-}
-
-const LayoutSelect = ({ selectedColumn, setSelectedColumn }: LayoutSelectProps) => {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant={'ghost'}>
-          {columns.find(c => c.value === selectedColumn)?.icon ?? <Grid2X2 />}
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuLabel>Layout</DropdownMenuLabel>
-        <DropdownMenuRadioGroup value={selectedColumn} onValueChange={setSelectedColumn}>
-          {
-            columns.map(column => (
-              <DropdownMenuRadioItem value={column.value} key={column.value}>
-                {column.icon}
-                <span>{column.placeholder}</span>
-              </DropdownMenuRadioItem>
-            ))
-          }
-        </DropdownMenuRadioGroup>
-
-      </DropdownMenuContent>
-    </DropdownMenu>
-  )
-}
