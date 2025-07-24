@@ -49,18 +49,18 @@ model User {
 }
 
 model App {
-    id        Int      @id @default(autoincrement())
+    id        String   @id @unique @default(uuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     title        String
     description  String
     logo         String
-    developerId  String
+    userId       String
     releaseNotes String?
     downloadLink String?
     screenshots  String[]
-    developer    User     @relation(fields: [developerId], references: [id], onDelete: Cascade)
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Website {
@@ -71,9 +71,9 @@ model Website {
     title         String
     description   String
     featuredImage String
-    developerId   String
+    userId        String @unique
     url           String
-    developer     User   @relation(fields: [developerId], references: [id], onDelete: Cascade)
+    user          User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Message {
