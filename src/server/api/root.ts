@@ -5,6 +5,9 @@ import { taskRouter } from "./routers/task-router";
 import { aiRouter } from "./routers/ai";
 import { communityPostRouter } from "./routers/community-post";
 import { userRouter } from "./routers/user";
+import { appsRouter } from "./routers/app";
+import { codeAgentRouter } from "./routers/code-agent";
+import { websiteRouter } from "./routers/website";
 
 /**
  * This is the primary router for your server.
@@ -18,6 +21,9 @@ export const appRouter = createTRPCRouter({
   ai: aiRouter,
   communityPost : communityPostRouter,
   user : userRouter,
+  app : appsRouter,
+  codeAgent : codeAgentRouter,
+  website : websiteRouter
 });
 
 // export type definition of API

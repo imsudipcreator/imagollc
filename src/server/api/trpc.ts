@@ -86,7 +86,7 @@ const isAuthed = t.middleware(async ({ next, ctx }) => {
   if (!user?.userId) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
-      message: "You must be looged in to interact with this service.",
+      message: "You must be logged in to interact with this service.",
     });
   }
 

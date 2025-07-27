@@ -49,31 +49,32 @@ model User {
 }
 
 model App {
-    id        Int      @id @default(autoincrement())
+    id        String   @id @unique @default(uuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
     title        String
     description  String
     logo         String
-    developerId  String
+    userId       String
     releaseNotes String?
     downloadLink String?
     screenshots  String[]
-    developer    User     @relation(fields: [developerId], references: [id], onDelete: Cascade)
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Website {
-    id        Int      @id @default(autoincrement())
+    id        String   @id @unique @default(uuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    title         String
-    description   String
-    featuredImage String
-    developerId   String
-    url           String
-    developer     User   @relation(fields: [developerId], references: [id], onDelete: Cascade)
+    slug          String
+    code          String
+    public        Boolean @default(false)
+    featuredImage String?
+    userId        String
+    prompt        String
+    user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Message {

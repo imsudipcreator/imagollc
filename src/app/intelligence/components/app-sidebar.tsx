@@ -1,14 +1,11 @@
 'use client'
 
-import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
+import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
 import React from 'react'
 import ImagoIcon from '@/components/icons/imago-icon'
-import { AlertCircle, Bell, ChevronsUpDown, CircleUser, Ellipsis, GalleryVerticalEnd, Loader, Pencil, PencilLine, Pin, Sparkles, Trash } from 'lucide-react'
-import { useUser } from '@clerk/nextjs';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { AlertCircle,  Ellipsis, GalleryVerticalEnd, Loader, Pencil, PencilLine, Pin, Trash } from 'lucide-react'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
-import { useIsMobile } from '@/hooks/use-mobile'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import SearchChats from './search-chats'
@@ -20,6 +17,7 @@ import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogT
 import { Input } from '@/components/ui/input'
 import { useSidebar } from '../contexts/SidebarContext'
 import { toast } from 'sonner'
+import UserFooter from '@/components/user-footer'
 
 
 // const chats = [
@@ -43,9 +41,7 @@ type ChatType = {
 
 const AppSidebar = () => {
     const { slug, chatId, setSlug } = useSidebar()
-    const isMobile = useIsMobile()
     const router = useRouter()
-    const { isSignedIn, user } = useUser()
     const { data: chats, isLoading, isError } = api.chat.getMany.useQuery()
     const updateSlug = api.chat.updateOne.useMutation({
         onSuccess: (data) => {
@@ -222,99 +218,7 @@ const AppSidebar = () => {
                     </Dialog>
                 </AlertDialog>
             </SidebarContent>
-            <SidebarFooter>
-                <SidebarMenu>
-                    {
-                        isSignedIn ? (
-                            <SidebarMenuItem>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <SidebarMenuButton
-                                            size={'lg'}
-                                            className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
-                                        >
-                                            <Avatar>
-                                                <AvatarImage src={user?.hasImage ? user?.imageUrl : undefined} />
-                                                <AvatarFallback>KK</AvatarFallback>
-                                            </Avatar>
-                                            <div className='grid flex-1 text-left text-sm leading-tight'>
-                                                <span className='truncate font-medium'>{user?.emailAddresses[0]?.emailAddress}</span>
-                                                <span className='truncate text-xs'>{`${user?.firstName} ${user.lastName}`}</span>
-                                            </div>
-                                            <ChevronsUpDown className='ml-auto' />
-                                        </SidebarMenuButton>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent
-                                        className='w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg'
-                                        side={isMobile ? 'bottom' : 'right'}
-                                        align='end'
-                                        sideOffset={4}
-                                    >
-                                        <DropdownMenuLabel>
-                                            <div className='flex items-center gap-2  px-1 py-1.5 text-left text-sm'>
-                                                <Avatar>
-                                                    <AvatarImage src={user?.hasImage ? user?.imageUrl : undefined} />
-                                                    <AvatarFallback>KK</AvatarFallback>
-                                                </Avatar>
-                                                <div className='grid flex-1 text-left text-sm leading-tight'>
-                                                    <span className='truncate font-medium'>{user?.emailAddresses[0]?.emailAddress}</span>
-                                                    <span className='truncate font-normal text-xs'>{`${user?.firstName} ${user.lastName}`}</span>
-                                                </div>
-                                            </div>
-                                        </DropdownMenuLabel>
-                                        <DropdownMenuSeparator />
-                                        <DropdownMenuGroup>
-                                            <DropdownMenuItem>
-                                                <Sparkles />
-                                                Upgrade your plan
-                                            </DropdownMenuItem>
-                                        </DropdownMenuGroup>
-                                        <DropdownMenuSeparator />
-                                        <DropdownMenuGroup>
-                                            <Link href={'/account'}>
-                                                <DropdownMenuItem>
-                                                    <CircleUser />
-                                                    Account
-                                                </DropdownMenuItem>
-                                            </Link>
-                                            <Link href={'/account'}>
-                                                <DropdownMenuItem>
-                                                    <Bell />
-                                                    Notifications
-                                                </DropdownMenuItem>
-                                            </Link>
-                                        </DropdownMenuGroup>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </SidebarMenuItem>
-                        ) : (
-                            <>
-                                <SidebarMenuItem>
-                                    <SidebarMenuButton asChild>
-                                        <Button variant={'default'}>
-                                            <Link href={'/sign-in'}>
-                                                Sign in
-                                            </Link>
-                                        </Button>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                                <SidebarMenuItem>
-                                    <SidebarMenuButton asChild>
-                                        <Button variant={'outline'}>
-                                            <Link href={'/sign-up'}>
-                                                Sign up
-                                            </Link>
-                                        </Button>
-
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            </>
-
-                        )
-                    }
-
-                </SidebarMenu>
-            </SidebarFooter>
+            <UserFooter/>
         </Sidebar>
     )
 }

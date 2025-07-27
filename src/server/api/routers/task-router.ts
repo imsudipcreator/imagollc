@@ -64,14 +64,35 @@ export const taskRouter = createTRPCRouter({
 
     return task;
   }),
-  getImageTasks : protectedProcedure.query(async ({ ctx }) =>  {
-    const tasks  = await db.postTask.findMany({
-      where : {
-        userId : ctx.userId,
-        status : "generating"
-      }
-    })
+  getImageTasks: protectedProcedure.query(async ({ ctx }) => {
+    const tasks = await db.postTask.findMany({
+      where: {
+        userId: ctx.userId,
+        status: "generating",
+      },
+    });
 
-    return tasks
-  })
+    return tasks;
+  }),
+  createWebsiteTask: protectedProcedure.mutation(async ({ ctx }) => {
+    const task = await db.postTask.create({
+      data: {
+        userId: ctx.userId,
+        status: "generating",
+        id: crypto.randomUUID(),
+      },
+    });
+
+    return task;
+  }),
+  getWebsiteTasks: protectedProcedure.query(async ({ ctx }) => {
+    const tasks = await db.postTask.findMany({
+      where: {
+        userId: ctx.userId,
+        status: "generating",
+      },
+    });
+
+    return tasks;
+  }),
 });
