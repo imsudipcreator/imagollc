@@ -5,7 +5,7 @@ const PreviewPage = () => {
     const { code } = useCreator()
     return (
         <div className='flex-1 flex'>
-            <iframe srcDoc={code} className='flex-1' loading='lazy'/>
+            <iframe srcDoc={code} className='flex-1' loading='lazy' sandbox='allow-forms allow-same-origin allow-scripts'/>
         </div>
     )
 }
