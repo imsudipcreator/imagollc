@@ -24,7 +24,7 @@ const formSchema = z.object({
     downloadLink: z.string().url(),
 })
 
-const NewAppCreate = () => {
+const NewWebsiteCreate = () => {
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [iconFile, setIconFile] = useState<File | null>(null)
     const [screenshotFiles, setScreenshotFiles] = useState<File[]>([])
@@ -96,7 +96,7 @@ const NewAppCreate = () => {
                 <SidebarMenuItem>
                     <SidebarMenuButton>
                         <Plus />
-                        New app
+                        New Website
                     </SidebarMenuButton>
                 </SidebarMenuItem>
             </DialogTrigger>
@@ -226,4 +226,4 @@ const NewAppCreate = () => {
     )
 }
 
-export default NewAppCreate
+export default NewWebsiteCreate

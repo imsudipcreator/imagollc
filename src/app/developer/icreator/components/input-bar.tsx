@@ -13,7 +13,6 @@ import { api } from '@/trpc/react';
 import { toast } from 'sonner';
 import { useParams, useRouter } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
-import type { Model } from '@/types/intel-types';
 import { useCreator } from '../contexts/creator-context';
 
 
@@ -29,7 +28,7 @@ const InputBar = () => {
     const { id } = useParams()
     const router = useRouter()
     const [loading, setLoading] = useState(false)
-    const { setCode } = useCreator()
+    const { setCode, isPending } = useCreator()
     const [isFocused, setIsFocused] = useState(false)
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -37,7 +36,17 @@ const InputBar = () => {
             prompt: ""
         }
     })
-    const generateCode = api.codeAgent.generate.useMutation({
+    const websiteTask = api.task.createWebsiteTask.useMutation({
+        onSuccess: () => {
+            toast.success("Task created successfully")
+        },
+        onError: (error) => {
+            toast.error("Something went wrong while creating your task", {
+                description: error.message
+            })
+        }
+    })
+    const generateCode = api.website.generate.useMutation({
         onSuccess: () => {
             form.reset()
         },
@@ -46,28 +55,27 @@ const InputBar = () => {
         }
     })
 
-
-
-
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         if (!id) {
             toast.error("Project ID could not be found")
             return
         }
         try {
-            const { code } = await generateCode.mutateAsync({
+            const task = await websiteTask.mutateAsync()
+            await generateCode.mutateAsync({
                 prompt: values.prompt,
-                projectId: id as string
+                projectId: id as string,
+                taskId: task.id
             })
-            if (code) setCode(code as string)
         } catch (error) {
             console.log(error)
             toast.error("Error generating your website")
-        } finally {
-            setLoading(false)
         }
 
     }
+
+
+    const isLoading = websiteTask.isPending
 
     return (
         <Form {...form}>
@@ -113,9 +121,9 @@ const InputBar = () => {
                         </div>
 
                         <div className='flex'>
-                            <Button type='submit' disabled={!form.formState.isValid || loading} size={'icon'} className='rounded-full'>
+                            <Button type='submit' disabled={!form.formState.isValid || isPending || isLoading} size={'icon'} className='rounded-full'>
                                 {
-                                    loading ? <Loader className='animate-spin' /> : <ArrowUp className='size-5' />
+                                    isPending ? <Loader className='animate-spin' /> : <ArrowUp className='size-5' />
                                 }
                             </Button>
                         </div>

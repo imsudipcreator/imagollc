@@ -72,7 +72,7 @@ model Website {
     code          String
     public        Boolean @default(false)
     featuredImage String?
-    userId        String  @unique
+    userId        String
     prompt        String
     user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

@@ -1,16 +1,22 @@
 'use client'
 
+import { api } from "@/trpc/react";
+import { useRouter } from "next/navigation";
 import React, { createContext, useContext, useState } from "react";
+import { toast } from "sonner";
 
 interface CreatorContextType {
-    code: string
-    setCode: React.Dispatch<React.SetStateAction<string>>
+  code: string
+  setCode: React.Dispatch<React.SetStateAction<string>>
+  handleCreateNewWebsite: () => void
+  isPending: boolean
+  setIsPending: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const CreatorContext = createContext<CreatorContextType | null>(null)
 
 
-const defaultCode = `
+export const defaultCode = `
 <!DOCTYPE html>
 <html>
   <head>
@@ -34,21 +40,41 @@ const defaultCode = `
 `
 
 export const CreatorProvider = ({ children }: { children: React.ReactNode }) => {
-    const [code, setCode] = useState<string>(defaultCode ?? "")
-    return (
-        <CreatorContext.Provider value={{ code, setCode }}>
-            {children}
-        </CreatorContext.Provider>
-    )
+  const router = useRouter()
+  const [code, setCode] = useState<string>(defaultCode ?? "")
+  const [isPending, setIsPending] = useState(true)
+
+  const createNewWebsite = api.website.createProject.useMutation({
+    onSuccess: (data) => {
+      toast.success("Project created successfully", {
+        description: "Edit with autocomplete or ask intelligence"
+      })
+      router.push(`/developer/icreator/projects/${data.id}`)
+    },
+
+    onError: () => {
+      toast.error("Could not create your project!", {
+        description: "Try again later or report this issue if persists"
+      })
+    }
+  })
+  const handleCreateNewWebsite = () => {
+    void createNewWebsite.mutateAsync()
+  }
+  return (
+    <CreatorContext.Provider value={{ code, setCode, handleCreateNewWebsite, isPending, setIsPending }}>
+      {children}
+    </CreatorContext.Provider>
+  )
 }
 
 
 export const useCreator = () => {
-    const context = useContext(CreatorContext)
+  const context = useContext(CreatorContext)
 
-    if (!context) {
-        throw new Error("useCreator must be used within CreatorProvider")
-    }
+  if (!context) {
+    throw new Error("useCreator must be used within CreatorProvider")
+  }
 
-    return context
+  return context
 }

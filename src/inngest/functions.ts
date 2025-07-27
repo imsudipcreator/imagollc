@@ -118,3 +118,58 @@ export const createCommunityPost = inngest.createFunction(
     return createdPost;
   },
 );
+
+export const createWebsite = inngest.createFunction(
+  { id: "create-website", retries: 1 },
+  { event: "create-website/run" },
+  async ({ event, step }) => {
+    const { taskId, prompt, userId, projectId } = event.data as {
+      taskId: string;
+      prompt: string;
+      userId: string;
+      projectId: string;
+    };
+
+    const codeAgentResponse = step.run("generate-code", async () => {
+      const response = await fetch(
+        "https://tool-user-ai.onrender.com/generate/code",
+        {
+          headers: { "Content-Type": "application/json" },
+          method: "POST",
+          body: JSON.stringify({ prompt }),
+        },
+      );
+
+      if (!response.ok) throw new Error("Failed to generate your website");
+
+      return (await response.json()) as {
+        response: string;
+        error: null | string;
+      };
+    });
+
+    const { response, error } = await codeAgentResponse;
+
+    if (!error) {
+      const data = await db.website.update({
+        where: {
+          id: projectId,
+          userId,
+        },
+        data: {
+          code: response,
+          prompt,
+        },
+      });
+
+      await db.postTask.delete({
+        where: {
+          userId,
+          id: taskId,
+        },
+      });
+
+      return data;
+    }
+  },
+);

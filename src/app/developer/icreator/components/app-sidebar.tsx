@@ -3,18 +3,22 @@
 import ImagoIcon from '@/components/icons/imago-icon'
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
 import UserFooter from '@/components/user-footer'
-import { AppWindow, Blocks, LayoutDashboard, Plus } from 'lucide-react'
+import { AppWindow, Blocks, Earth, LayoutDashboard, Plus } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
-import NewAppCreate from './new-app-create'
+import { api } from '@/trpc/react'
+import { toast } from 'sonner'
+import { useRouter } from 'next/navigation'
+import { useCreator } from '../contexts/creator-context'
 
 const routes = [
     { label: "Dashboard", href: "/developer/icreator/", icon: <LayoutDashboard /> },
-    { label: "Apps", href: "/developer/icreator/apps", icon: <Blocks /> },
-    { label: "Websites", href: "/developer/icreator/websites", icon: <AppWindow /> }
+    { label: "Websites", href: "/developer/icreator/websites", icon: <AppWindow /> },
+    { label: "Community", href: "/developer/icreator/community", icon: <Earth /> },
 ]
 
 const AppSidebar = () => {
+    const { handleCreateNewWebsite } = useCreator()
     return (
         <Sidebar collapsible='icon'>
             <SidebarHeader>
@@ -38,11 +42,10 @@ const AppSidebar = () => {
                 <SidebarGroup>
                     <SidebarGroupLabel>Creation</SidebarGroupLabel>
                     <SidebarMenu>
-                        <NewAppCreate/>
                         <SidebarMenuItem>
-                            <SidebarMenuButton>
+                            <SidebarMenuButton onClick={handleCreateNewWebsite}>
                                 <Plus />
-                                New website
+                                New Website
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                     </SidebarMenu>

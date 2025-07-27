@@ -2,20 +2,31 @@
 
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
 import { api } from '@/trpc/react'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useId, useState } from 'react'
 import ChatPage from './components/chat'
 import PreviewPage from './components/preview-page'
 import { useCreator } from './contexts/creator-context'
 import { cn } from '@/lib/utils'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { TabsContent } from '@/components/ui/tabs'
-import { Loader } from 'lucide-react'
+import { LayoutGridIcon, Loader, PlusIcon, SearchIcon } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
+import AppSidebar from './components/app-sidebar'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
+import { Button } from '@/components/ui/button'
+import InfoMenu from '@/components/originui/info-menu'
+import NotificationMenu from '@/components/originui/notification-menu'
+import { useRouter } from 'next/navigation'
 
 const ICreatorPage = () => {
   const { } = useCreator()
+  const router = useRouter()
   const isMobile = useIsMobile()
   const [isReady, setIsReady] = useState(false)
+  const { data, isLoading, isFetching } = api.website.findMany.useQuery()
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -25,7 +36,7 @@ const ICreatorPage = () => {
     return () => clearTimeout(timer)
   }, [])
 
-  const showLoading = !isReady
+  const showLoading = !isReady || isLoading
 
   if (showLoading) {
     return (
@@ -36,31 +47,107 @@ const ICreatorPage = () => {
 
   }
   return (
-    <div className='w-full min-h-0 flex flex-col px-6'>
-      <div className='w-full py-8'>
-        <h1 className='text-5xl font-semibold'>Sudip&apos;s Projects</h1>
+    <SidebarProvider>
+      <AppSidebar />
+      <div className='w-full min-h-0 flex flex-col'>
+        <Navbar />
+        <div className='w-full px-4 md:px-6'>
+          <div className='w-full py-8'>
+            <h1 className='text-3xl font-semibold'>Sudip&apos;s Projects</h1>
+          </div>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
+            {
+              data?.map((item, i) => (
+                <Card key={item.id} className='w-full min-h-44 rounded-none' onClick={() => router.push(`/developer/icreator/projects/${item.id}`)}>
+                  <CardHeader>
+                    <CardTitle>
+                      {item.slug}
+                    </CardTitle>
+                    <CardDescription>
+                      {item.prompt}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardFooter>
+                    Sudip
+                  </CardFooter>
+                </Card>
+              ))
+            }
+          </div>
+        </div>
+
       </div>
-      <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
-        {
-          Array(12).fill(0).map((num, i) => (
-            <Card key={i} className='w-full min-h-44 rounded-none'>
-              <CardHeader>
-                <CardTitle>
-                  Title
-                </CardTitle>
-                <CardDescription>
-                  What is up?
-                </CardDescription>
-              </CardHeader>
-              <CardFooter>
-                Sudip
-              </CardFooter>
-            </Card>
-          ))
-        }
-      </div>
-    </div>
+    </SidebarProvider>
   )
 }
 
 export default ICreatorPage
+
+
+const Navbar = () => {
+  const id = useId()
+  const [checked, setChecked] = useState<boolean>(true)
+  const { handleCreateNewWebsite } = useCreator()
+  return (
+    <header className="border-b px-4 md:px-6">
+      <div className="flex h-16 items-center justify-between gap-4">
+        {/* Left side */}
+        <div className="relative flex-1">
+          <Input
+            id={`input-${id}`}
+            className="peer h-8 w-full max-w-xs ps-8 pe-2"
+            placeholder="Search..."
+            type="search"
+          />
+          <div className="text-muted-foreground/80 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-2 peer-disabled:opacity-50">
+            <SearchIcon size={16} />
+          </div>
+        </div>
+        {/* Right side */}
+        <div className="flex items-center gap-4">
+          {/* Test mode */}
+          <div className="inline-flex items-center gap-2 max-md:hidden">
+            <Label htmlFor={`switch-${id}`} className="text-sm font-medium">
+              Test mode
+            </Label>
+            <Switch
+              id={`switch-${id}`}
+              checked={checked}
+              onCheckedChange={setChecked}
+              className="h-5 w-8 [&_span]:size-4 data-[state=checked]:[&_span]:translate-x-3 data-[state=checked]:[&_span]:rtl:-translate-x-3"
+              aria-label="Toggle switch"
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            {/* Layout button */}
+            <SidebarTrigger />
+            {/* <Button
+              size="icon"
+              variant="ghost"
+              className="text-muted-foreground size-8 rounded-full shadow-none"
+              aria-label="Open layout menu"
+            >
+              <LayoutGridIcon size={16} aria-hidden="true" />
+            </Button> */}
+            {/* Info menu */}
+            <InfoMenu />
+            {/* Notification */}
+            <NotificationMenu />
+            {/* Settings */}
+            {/* <SettingsMenu /> */}
+          </div>
+          {/* Add button */}
+          <Button
+            className="size-8 rounded-full"
+            size="icon"
+            aria-label="Add new item"
+            onClick={handleCreateNewWebsite}
+          >
+            <PlusIcon size={16} aria-hidden="true" />
+          </Button>
+        </div>
+      </div>
+    </header>
+
+  )
+}
