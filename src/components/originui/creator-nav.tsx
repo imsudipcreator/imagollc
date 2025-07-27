@@ -1,17 +1,17 @@
 import { SparklesIcon, UploadIcon } from "lucide-react"
 
-import AppToggle from "./app-toggle"
+import AppToggle from "@/components/originui/app-toggle"
 import TeamSwitcher from "@/components/originui/team-switcher"
 import { Button } from "@/components/ui/button"
 
 const teams = ["Acme Inc.", "Origin UI", "Junon"]
 
-export default function Navbar() {
+export default function CreatorNav() {
   return (
-    <header className="border-b px-4 md:px-6 w-full min-h-12">
+    <header className="border-b px-4 md:px-6 flex-1">
       <div className="flex h-16 items-center justify-between gap-4">
         {/* Left side */}
-        <div className="flex flex-1 items-center gap-2 not-md:hidden">
+        <div className="flex flex-1 items-center gap-2">
           <TeamSwitcher teams={teams} defaultTeam={teams[0] ?? "Acme Inc."} />
         </div>
         {/* Middle area */}
