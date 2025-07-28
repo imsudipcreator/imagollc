@@ -162,14 +162,14 @@ export const createWebsite = inngest.createFunction(
         },
       });
 
-      await db.postTask.delete({
-        where: {
-          userId,
-          id: taskId,
-        },
-      });
-
+      
       return data;
     }
+    await db.postTask.delete({
+      where: {
+        userId,
+        id: taskId,
+      },
+    });
   },
 );
