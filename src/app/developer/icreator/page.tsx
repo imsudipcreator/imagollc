@@ -61,6 +61,11 @@ const ICreatorPage = () => {
           </div>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2'>
             {
+              data?.length === 0 && (
+                <h1>No Projects found. create one.</h1>
+              )
+            }
+            {
               data?.map((item) => (
                 <ContextMenu key={item.id}>
                   <ContextMenuTrigger asChild>
