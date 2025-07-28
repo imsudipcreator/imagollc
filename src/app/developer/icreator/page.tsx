@@ -1,6 +1,6 @@
 'use client'
 
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable'
+import moment from 'moment';
 import { api } from '@/trpc/react'
 import React, { useEffect, useId, useState } from 'react'
 import ChatPage from './components/chat'
@@ -9,7 +9,7 @@ import { useCreator } from './contexts/creator-context'
 import { cn } from '@/lib/utils'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { TabsContent } from '@/components/ui/tabs'
-import { LayoutGridIcon, Loader, PlusIcon, SearchIcon } from 'lucide-react'
+import { Globe, LayoutGridIcon, Loader, PencilLine, PlusIcon, SearchIcon } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar'
 import AppSidebar from './components/app-sidebar'
@@ -20,9 +20,13 @@ import { Button } from '@/components/ui/button'
 import InfoMenu from '@/components/originui/info-menu'
 import NotificationMenu from '@/components/originui/notification-menu'
 import { useRouter } from 'next/navigation'
+import { useUser } from '@clerk/nextjs'
+import { Badge } from '@/components/ui/badge'
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from '@/components/ui/context-menu';
 
 const ICreatorPage = () => {
   const { } = useCreator()
+  const { user } = useUser()
   const router = useRouter()
   const isMobile = useIsMobile()
   const [isReady, setIsReady] = useState(false)
@@ -53,24 +57,42 @@ const ICreatorPage = () => {
         <Navbar />
         <div className='w-full px-4 md:px-6'>
           <div className='w-full py-8'>
-            <h1 className='text-3xl font-semibold'>Sudip&apos;s Projects</h1>
+            <h1 className='text-3xl font-semibold'>{`${user?.firstName}'s`} Projects</h1>
           </div>
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
+          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2'>
             {
-              data?.map((item, i) => (
-                <Card key={item.id} className='w-full min-h-44 rounded-none' onClick={() => router.push(`/developer/icreator/projects/${item.id}`)}>
-                  <CardHeader>
-                    <CardTitle>
-                      {item.slug}
-                    </CardTitle>
-                    <CardDescription>
-                      {item.prompt}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardFooter>
-                    Sudip
-                  </CardFooter>
-                </Card>
+              data?.map((item) => (
+                <ContextMenu key={item.id}>
+                  <ContextMenuTrigger asChild>
+                    <Card className='w-full min-h-44 relative cursor-pointer hover:shadow-lg transition-all duration-200' onClick={() => router.push(`/developer/icreator/projects/${item.id}`)}>
+                      <CardHeader>
+                        <CardTitle>
+                          {item.slug}
+                        </CardTitle>
+                        <CardDescription>
+                          last updated: {moment(item.updatedAt).fromNow()}
+                        </CardDescription>
+                      </CardHeader>
+                      <Badge className={'absolute top-4 right-5'}>{item.public ? "Public" : "Private"}</Badge>
+                      <CardContent>
+                        <h1>
+                          {item.prompt.slice(0, 60) + "..."}
+                        </h1>
+                      </CardContent>
+                    </Card>
+                  </ContextMenuTrigger>
+                  <ContextMenuContent>
+                    <ContextMenuItem>
+                      <PencilLine />
+                      Rename
+                    </ContextMenuItem>
+                    <ContextMenuItem>
+                      <Globe />
+                      Public
+                    </ContextMenuItem>
+                  </ContextMenuContent>
+                </ContextMenu>
+
               ))
             }
           </div>
@@ -86,7 +108,6 @@ export default ICreatorPage
 
 const Navbar = () => {
   const id = useId()
-  const [checked, setChecked] = useState<boolean>(true)
   const { handleCreateNewWebsite } = useCreator()
   return (
     <header className="border-b px-4 md:px-6">
@@ -105,19 +126,6 @@ const Navbar = () => {
         </div>
         {/* Right side */}
         <div className="flex items-center gap-4">
-          {/* Test mode */}
-          <div className="inline-flex items-center gap-2 max-md:hidden">
-            <Label htmlFor={`switch-${id}`} className="text-sm font-medium">
-              Test mode
-            </Label>
-            <Switch
-              id={`switch-${id}`}
-              checked={checked}
-              onCheckedChange={setChecked}
-              className="h-5 w-8 [&_span]:size-4 data-[state=checked]:[&_span]:translate-x-3 data-[state=checked]:[&_span]:rtl:-translate-x-3"
-              aria-label="Toggle switch"
-            />
-          </div>
           <div className="flex items-center gap-2">
             {/* Layout button */}
             <SidebarTrigger />
