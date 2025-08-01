@@ -2,7 +2,7 @@
 
 import { usePathname } from 'next/navigation'
 import React from 'react'
-import { Footer } from './footer'
+import Footer from './footer'
 
 const FooterWrapper = () => {
     const pathname = usePathname()

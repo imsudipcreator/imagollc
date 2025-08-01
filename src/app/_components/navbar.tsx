@@ -1,29 +1,17 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 'use client'
 
 import ImagoIcon from "@/components/icons/imago-icon"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import {
-    NavigationMenu,
-    NavigationMenuContent,
-    NavigationMenuItem,
-    NavigationMenuLink,
-    NavigationMenuList,
-    NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu"
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
 import { useUser } from "@clerk/nextjs"
-import InfoMenu from "@/components/originui/info-menu"
-import NotificationMenu from "@/components/originui/notification-menu"
-import UserMenu from "@/components/originui/user-menu"
-import { navigationLinks } from "@/constants/routes"
+import { routes } from "@/constants/routes"
 import Link from "next/link"
-import ThemeToggle from "@/app/_components/theme-toggle"
-import GlobalSearch from "./global-search"
+import ImagoSymbol from "@/components/icons/imago-symbol"
+import { useNavbar } from "@/contexts/home/navbar-context"
+import AnimatedHamburger from "@/components/animated-hamburger"
+import { useGSAP } from "@gsap/react"
+import gsap from "gsap"
+import { useRef } from "react"
 
 // Navigation links array to be used in both desktop and mobile menus
 // const navigationLinks = [
@@ -75,216 +63,130 @@ import GlobalSearch from "./global-search"
 
 export default function Navbar() {
     const { isSignedIn } = useUser()
+    const { setOpenedNav, openedNav, openedSubRoutes, setOpenedSubRoutes, closeNavs } = useNavbar()
+    const closeSubRouteRef = useRef<HTMLButtonElement>(null)
+
+    function handleMouseHover(label: string) {
+        const hoveredRoute = routes.find((item) => item.label === label)
+        const hasChildren = hoveredRoute?.children
+
+        if (hasChildren) {
+            setOpenedNav(hoveredRoute.label.toLowerCase())
+        }
+    }
+
+
+    useGSAP(() => {
+        const target = closeSubRouteRef?.current
+        if (!target) return
+        if (openedSubRoutes !== null) {
+            target.classList.remove("pointer-events-none");
+
+            gsap.fromTo(target, {
+                opacity: 0,
+                x: 20,
+                scale: 0
+            }, {
+                opacity: 1,
+                x: 0,
+                scale: 1,
+                duration: 0.5
+            })
+        } else {
+            gsap.to(target, {
+                opacity: 0,
+                scale: 0,
+                duration: 0.5,
+                onComplete: () => {
+                    target.classList.add("pointer-events-none")
+                }
+            })
+        }
+
+    }, [openedSubRoutes, openedNav])
     return (
-        <header className="border-b w-full sticky px-6 top-0 z-50 bg-background max-w-[80rem]">
-            <div className="flex h-16 items-center justify-between gap-4">
-                {/* Left side */}
-                <div className="flex items-center gap-2">
-                    {/* Mobile menu trigger */}
-                    <Popover>
-                        <PopoverTrigger asChild>
-                            <Button
-                                className="group size-8 md:hidden text-foreground"
-                                variant="ghost"
-                                size="icon"
-                            >
-                                <svg
-                                    className="pointer-events-none"
-                                    width={16}
-                                    height={16}
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        d="M4 12L20 12"
-                                        className="origin-center -translate-y-[7px] transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.1)] group-aria-expanded:translate-x-0 group-aria-expanded:translate-y-0 group-aria-expanded:rotate-[315deg]"
-                                    />
-                                    <path
-                                        d="M4 12H20"
-                                        className="origin-center transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.8)] group-aria-expanded:rotate-45"
-                                    />
-                                    <path
-                                        d="M4 12H20"
-                                        className="origin-center translate-y-[7px] transition-all duration-300 ease-[cubic-bezier(.5,.85,.25,1.1)] group-aria-expanded:translate-y-0 group-aria-expanded:rotate-[135deg]"
-                                    />
-                                </svg>
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent align="start" className="w-64 p-1 md:hidden">
-                            <NavigationMenu className="max-w-none *:w-full">
-                                <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
-                                    {navigationLinks.map((link, index) => (
-                                        <NavigationMenuItem key={index} className="w-full">
-                                            {link.submenu ? (
-                                                <>
-                                                    <div className="text-muted-foreground px-2 py-1.5 text-xs font-medium">
-                                                        {link.label}
-                                                    </div>
-                                                    <ul>
-                                                        {link.items.map((item, itemIndex) => (
-                                                            <li key={itemIndex}>
-                                                                <NavigationMenuLink
-                                                                    href={item.href}
-                                                                    className="py-1.5"
-                                                                >
-                                                                    {item.label}
-                                                                </NavigationMenuLink>
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                </>
-                                            ) : (
-                                                <NavigationMenuLink href={link.href} className="py-1.5">
-                                                    {link.label}
-                                                </NavigationMenuLink>
-                                            )}
-                                            {/* Add separator between different types of items */}
-
-                                            {(() => {
-                                                const nextLink = navigationLinks[index + 1]
-                                                const currentLink = link;
-
-                                                const shouldShowSeparator =
-                                                    nextLink &&
-                                                    (
-                                                        (!currentLink.submenu && nextLink.submenu) ??
-                                                        (currentLink.submenu && !nextLink.submenu) ??
-                                                        (currentLink.submenu && nextLink.submenu && currentLink.type !== nextLink.type)
-                                                    );
-
-                                                return nextLink && !shouldShowSeparator ? (
-                                                    <div
-                                                        role="separator"
-                                                        aria-orientation="horizontal"
-                                                        className="bg-border -mx-1 my-1 h-px w-full"
-                                                    />
-                                                ) : null;
-
-                                            })()}
-                                        </NavigationMenuItem>
-                                    ))}
-                                </NavigationMenuList>
-                            </NavigationMenu>
-                        </PopoverContent>
-                    </Popover>
-                    {/* Main nav */}
-                    <div className="flex items-center gap-6">
-                        <a href="#" className="text-primary hover:text-primary/90">
-                            <ImagoIcon />
-                        </a>
-                        {/* Navigation menu */}
-                        <NavigationMenu viewport={false} className="max-md:hidden">
-                            <NavigationMenuList className="gap-2">
-                                {navigationLinks.map((link, index) => (
-                                    <NavigationMenuItem key={index}>
-                                        {link.submenu ? (
-                                            <>
-                                                <NavigationMenuTrigger className="text-muted-foreground hover:text-primary bg-transparent px-2 py-1.5 font-medium *:[svg]:-me-0.5 *:[svg]:size-3.5">
-                                                    {link.label}
-                                                </NavigationMenuTrigger>
-                                                <NavigationMenuContent className="data-[motion=from-end]:slide-in-from-right-16! data-[motion=from-start]:slide-in-from-left-16! data-[motion=to-end]:slide-out-to-right-16! data-[motion=to-start]:slide-out-to-left-16! z-50 p-1">
-                                                    <ul
-                                                        className={cn(
-                                                            link.type === "description"
-                                                                ? "min-w-64"
-                                                                : "min-w-48"
-                                                        )}
-                                                    >
-                                                        {link.items.map((item, itemIndex) => (
-                                                            <li key={itemIndex}>
-                                                                <NavigationMenuLink
-                                                                    href={item.href}
-                                                                    className="py-1.5"
-                                                                >
-                                                                    {/* Display icon if present */}
-                                                                    {link.type === "icon" && "icon" in item && (
-                                                                        <div className="flex items-center gap-2">
-                                                                            {item.icon !== null && (
-                                                                                <item.icon
-                                                                                    size={16}
-                                                                                    className="text-foreground opacity-60"
-                                                                                    aria-hidden="true"
-                                                                                />
-                                                                            )}
-                                                                            <span>{item.label}</span>
-                                                                        </div>
-                                                                    )}
-
-                                                                    {/* Display label with description if present */}
-                                                                    {link.type === "description" &&
-                                                                        "description" in item ? (
-                                                                        <div className="space-y-1">
-                                                                            <div className="font-medium">
-                                                                                {item.label}
-                                                                            </div>
-                                                                            <p className="text-muted-foreground line-clamp-2 text-xs">
-                                                                                {item.description?.toString()}
-                                                                            </p>
-                                                                        </div>
-                                                                    ) : (
-                                                                        // Display simple label if not icon or description type
-                                                                        !link.type ||
-                                                                        (link.type !== "icon" &&
-                                                                            link.type !== "description" && (
-                                                                                <span>{item.label}</span>
-                                                                            ))
-                                                                    )}
-                                                                </NavigationMenuLink>
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                </NavigationMenuContent>
-                                            </>
-                                        ) : (
-                                            <NavigationMenuLink
-                                                href={link.href}
-                                                className="text-muted-foreground hover:text-primary py-1.5 font-medium"
-                                            >
-                                                {link.label}
-                                            </NavigationMenuLink>
-                                        )}
-                                    </NavigationMenuItem>
-                                ))}
-                            </NavigationMenuList>
-                        </NavigationMenu>
-                    </div>
-                </div>
-                {/* Right side */}
-                <div className="flex items-center gap-2">
-                    <ThemeToggle />
-                    <GlobalSearch/>
-                    {
-                        isSignedIn ? (
-                            <div className="flex items-center gap-4">
-                                <div className="flex items-center gap-2">
-                                    {/* Info menu */}
-                                    <InfoMenu />
-                                    {/* Notification */}
-                                    <NotificationMenu />
-                                </div>
-                                {/* User menu */}
-                                <UserMenu />
-                            </div>
-                        ) : (
-                            <div className="flex items-center gap-2">
-                                {/* <Button asChild variant="ghost" size="sm" className="text-sm">
-                                    <Link href="/sign-in">Sign In</Link>
-                                </Button> */}
-                                <Button asChild size="sm" className="text-sm">
-                                    <Link href="/sign-up">Get Started</Link>
-                                </Button>
-                            </div>
-                        )
-                    }
-                </div>
-
-
+        <nav className={cn("md:h-11 h-12 z-50 w-full flex items-center justify-center sticky top-0 backdrop-blur-lg transition-all duration-200",
+            openedNav ? "bg-white" : "bg-white/60"
+        )}>
+            {/**Desktop Navbar */}
+            <div className="w-full max-w-[61rem] h-full lg:flex hidden items-center justify-between">
+                <Link href={'/'}>
+                    <ImagoIcon className={''} />
+                </Link>
+                {
+                    routes.map((route) => (
+                        <Link
+                            onMouseEnter={() => handleMouseHover(route.label)}
+                            key={route.href} href={route.href}
+                            className={cn("text-[13px] ")}
+                        >
+                            {route.label}
+                        </Link>
+                    ))
+                }
+                <button className="cursor-pointer flex items-center justify-center" onClick={() => { if (openedNav !== 'search') setOpenedNav('search') }}>
+                    <ImagoSymbol fontSize="20px" name="search" />
+                    {/* <Search01Icon className="size-[17px]" color="#333333"/> */}
+                </button>
+                <button onClick={() => setOpenedNav(prev => prev === 'profile' ? null : 'profile')} className="cursor-pointer flex items-center justify-center ">
+                    <ImagoSymbol fontSize="20px" name="person_crop_circle_badge_exclam" />
+                </button>
             </div>
-        </header>
+
+            {/**Device Navbar */}
+            <div className="lg:hidden flex w-[92%] items-center justify-between">
+                <div className="flex items-center h-full relative">
+                    <Link href={'/'} className={`${openedNav ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'} duration-500 `}>
+                        <ImagoIcon size={16} />
+                    </Link>
+                    <button ref={closeSubRouteRef} onClick={() => openedSubRoutes !== null && setOpenedSubRoutes(null)} className={cn("flex items-center justify-center absolute left-0 top-0 scale-100", openedSubRoutes === null && 'pointer-events-none   opacity-0')}>
+                        <ImagoSymbol fontSize="20px" name="chevron_left" />
+                    </button>
+                </div>
+
+                <div className="flex items-center gap-7">
+                    <button onClick={() => setOpenedNav(prev => prev === 'search' ? null : 'search')}
+                        className={`cursor-pointer flex items-center justify-center ${openedNav ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'} duration-500`}
+                    >
+                        <i className="f7-icons hover:text-black" style={{ fontSize: '20px' }}>
+                            search
+                        </i>
+                        {/* <Search01Icon className="size-[17px]" color="#333333"/> */}
+                    </button>
+                    <button onClick={() => setOpenedNav(prev => prev === 'profile' ? null : 'profile')}
+                        className={`cursor-pointer flex items-center justify-center ${openedNav ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'} duration-500`}>
+                        <i className="f7-icons hover:text-black" style={{ fontSize: '20px' }}>
+                            person_crop_circle_badge_exclam
+                        </i>
+                    </button>
+                    {/* <div
+                        onClick={() => openedNav !== null ? setOpenedNav(null) : setOpenedNav('menu')}
+                        className="flex flex-col items-center relative h-2 w-4 ">
+                        <div
+                            id="line1"
+                            className="w-4 h-[1.5px] bg-[var(--color-navbar-icon)] rounded-full absolute"
+                            style={{
+                                top: "0%",
+                                left: "50%",
+                                transform: "translate(-50%, -50%)",
+                                transformOrigin: "center",
+                            }}
+                        />
+                        <div
+                            id="line2"
+                            className="w-4 h-[1.5px] bg-[var(--color-navbar-icon)] rounded-full absolute"
+                            style={{
+                                top: "100%",
+                                left: "50%",
+                                transform: "translate(-50%, -50%)",
+                                transformOrigin: "center",
+                            }}
+                        />
+                    </div> */}
+
+                    <AnimatedHamburger toggle={() => openedNav !== null ? closeNavs() : setOpenedNav('menu')} isOpen={openedNav} />
+                </div>
+            </div>
+        </nav>
     )
 }

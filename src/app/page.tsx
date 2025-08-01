@@ -8,9 +8,9 @@ export default async function Home() {
   return (
     <HydrateClient>
       <main className="w-full flex flex-col items-center justify-center">
-        <HeroSection/>
-        <Features/>
-        <MainFeatures/>
+        <HeroSection />
+        <Features />
+        <MainFeatures />
       </main>
     </HydrateClient>
   );
