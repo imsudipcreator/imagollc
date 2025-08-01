@@ -1,55 +1,177 @@
-// import { Logo, LogoImage, LogoText } from "@/components/shadcnblocks/logo";
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// import Image from 'next/image';
+import React, { useEffect, useState } from 'react'
+// import ImagoIcon from '@/public/imago-icon.svg'
+import { usePathname } from 'next/navigation';
+import Link from 'next/link';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from '@/components/ui/breadcrumb';
+import { cn } from '@/lib/utils';
+import { navigationSections } from '@/constants/routes';
+import ImagoIcon from '@/components/icons/imago-icon';
 
-import ImagoIcon from "@/components/icons/imago-icon";
-import { bottomLinks, navigationSections } from "@/constants/routes";
-import Link from "next/link";
 
-export const Footer = () => {
+export default function Footer() {
+    const pathName = usePathname()
+    const [openedAccordion, setOpenedAccordion] = useState("");
+    const [routes, setRoutes] = useState<{title : string, href : string}[]>([])
+    const toggleAccordion = (accordion: string) => {
+        if (openedAccordion === accordion) setOpenedAccordion("");
+        else setOpenedAccordion(accordion);
+    };
+    const upperCase = (string: string) => {
+        return string[0]?.toUpperCase() + string.slice(1)
+    }
+
+    useEffect(() => {
+        function generateBreadcrumbs(path : string) {
+            const segments = path.split('/').filter(Boolean); // removes empty strings
+            const breadcrumbs : {title : string, href : string}[] = [];
+
+            segments.reduce((acc : any, segment : any) => {
+                const href = `${acc}/${segment}`;
+                breadcrumbs.push({
+                    title: segment,
+                    href
+                });
+                return href;
+            }, '');
+
+            return breadcrumbs;
+        }
+
+        const breadcrumbs = generateBreadcrumbs(pathName)
+        setRoutes(breadcrumbs)
+    }, [pathName])
+
+
+
+
     return (
-        <section className="pt-32 pb-20 max-w-[80rem] w-full px-6 bg-sidebar-accent">
-            <div className="container">
-                <footer>
-                    <div className="grid grid-cols-2 gap-8 lg:grid-cols-6 ">
-                        <div className="col-span-2 mb-8 lg:mb-0 h-full row-span-3">
-                            <div className="flex items-center gap-2 lg:justify-start">
-                                <Link href="/" className="flex items-center gap-2">
-                                    <ImagoIcon size={28} />
-                                    <span className="text-4xl font-roobert font-semibold">Imago llc</span>
-                                </Link>
-                            </div>
-                            <p className="mt-4 font-bold">Crafting the future of tech</p>
-                        </div>
-                        {navigationSections.map((section, sectionIdx) => (
-                            <div key={sectionIdx} className="">
-                                <h3 className="mb-4 font-bold">{section.label}</h3>
-                                <ul className="text-muted-foreground space-y-4">
-                                    {section.routes.map((route, routeIdx) => (
-                                        <li
-                                            key={routeIdx}
-                                            className="hover:text-primary font-medium"
-                                        >
-                                            <Link href={route.href} className="hover:underline underline-offset-3">
-                                                {route.label}
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        ))}
-                    </div>
-                    <div className="text-muted-foreground mt-24 flex flex-col justify-between gap-4 border-t pt-8 text-sm font-medium md:flex-row md:items-center">
-                        <p>{'© 2025 Imagollc. All rights reserved'}</p>
-                        <ul className="flex gap-4">
-                            {bottomLinks.map((link, linkIdx) => (
-                                <li key={linkIdx} className="hover:text-primary underline">
-                                    <Link href={link.href}>{link.label}</Link>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </footer>
-            </div>
-        </section>
-    );
-};
+        <footer className={cn('w-full min-h-14 flex items-center justify-center text-body')}>
+            <div className='md:max-w-[61rem] w-[92%] flex flex-col items-center justify-center pb-10 md:gap-6 gap-3 pt-3.5'>
 
+                <div className="w-full md:pt-5 py-2 flex items-center justify-start transition-colors">
+                    <Breadcrumb>
+                        <BreadcrumbList>
+                            <BreadcrumbItem>
+                                <BreadcrumbLink href={'/'}> <ImagoIcon className={cn('')} /></BreadcrumbLink>
+                            </BreadcrumbItem>
+                            <BreadcrumbSeparator className={cn('')} />
+                            {
+                                routes.length > 0 ? routes.map((route, index) => (
+                                    <div key={index} className='flex items-center gap-1.5'>
+                                        <BreadcrumbItem>
+                                            <BreadcrumbLink href={route.href} className={cn()}>{upperCase(route.title)}</BreadcrumbLink>
+                                        </BreadcrumbItem>
+
+                                        <BreadcrumbSeparator className={cn(routes.length === index + 1 && 'hidden')} />
+                                    </div>
+                                )) : (
+                                    <BreadcrumbItem>
+                                        <BreadcrumbLink href={`/`} className={cn()}>{'Home'}</BreadcrumbLink>
+                                    </BreadcrumbItem>
+                                )
+                            }
+
+
+
+                        </BreadcrumbList>
+                    </Breadcrumb>
+                </div>
+
+
+                {/** Desktop footer */}
+                <div className={cn("lg:block hidden w-full h-full pt-5 columns-3 text-sm space-y-6 border-t border-border-dark")}
+                >
+                    {navigationSections.map(section => (
+                        <section className='break-inside-avoid' key={section.title}>
+                            <h2 className={cn('font-semibold mb-2 ',)}>{section.title}</h2>
+                            <ul className='flex flex-col gap-1.5 '>
+                                {section.routes.map(route => (
+                                    <li className={cn('hover:underline ')} key={route.href}>
+                                        <Link href={route.href}>{route.label}</Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </section>
+                    ))}
+                </div>
+
+                {/** Device footer */}
+                <div className="lg:hidden flex flex-col w-full h-full gap-1">
+                    {
+                        navigationSections.map(section => (
+                            <div className={cn(
+                                'border-b  flex flex-col justify-center gap-2',
+                                section.title === 'Explore Imago' && 'border-t pt-1.5',
+                               
+
+                            )}
+                                key={section.title}>
+                                <div
+                                    onClick={() => toggleAccordion(section.title)}
+                                    className="flex items-center justify-between py-1"
+                                >
+                                    <h1 className="text-sm">{section.title}</h1>
+                                    <i
+                                        className={`${openedAccordion === section.title && "rotate-180"
+                                            } transition-all duration-500 f7-icons`} style={{ fontSize: '14px' }}>
+                                        chevron_down
+                                    </i>
+                                </div>
+                                <div
+                                    className={`text-sm flex flex-col gap-2 transition-all duration-500 px-3 overflow-clip ${openedAccordion === section.title
+                                        ? "py-2 max-h-48"
+                                        : "py-0 max-h-0"
+                                        } `}
+                                >
+                                    {section.routes.map((route) => (
+                                        <Link
+                                            href={route.href}
+                                            className={cn("hover:underline")}
+                                            key={route.label}
+                                        >
+                                            {route.label}
+                                        </Link>
+                                    ))}
+                                </div>
+                            </div>
+                        ))
+                    }
+                </div>
+
+
+                <div className={cn('w-full flex flex-col pt-7  text-xs md:text-sm')}>
+                    <p className={cn('border-b  pb-2.5')}>Copyright © 2025 Imago llc. All rights reserved.</p>
+                    <div className='w-full flex items-center justify-between pt-3.5'>
+                        <div className={cn('flex items-center gap-2 ')}>
+                            {
+                                [
+                                    { href: '/policy/privacy', label: 'Privacy Policy' },
+                                    { href: '/policy/terms', label: 'Terms of Service' },
+                                    { href: '/sitemap', label: 'Sitemap', noBorder: true },
+
+                                ].map((link, idx) => (
+                                    <Link
+                                        href={link.href}
+                                        key={idx}
+                                        className={cn(
+                                            'hover:underline',
+                                            !link.noBorder && 'border-r pr-1.5',
+                                            
+                                        )}
+                                    >
+                                        {link.label}
+                                    </Link>
+                                ))
+                            }
+                        </div>
+
+                        <p>India</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    )
+}

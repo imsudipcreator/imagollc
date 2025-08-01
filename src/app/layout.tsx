@@ -9,6 +9,8 @@ import NavbarWrapper from "./_components/navbar-wrapper";
 import { ThemeProvider } from "@/components/theme-provider";
 import FooterWrapper from "./_components/footer-wrapper";
 import { Toaster } from "@/components/ui/sonner";
+import 'framework7-icons';
+import { NavbarProvider } from "@/contexts/home/navbar-context";
 
 export const metadata: Metadata = {
   title: "Imago – Your Hub for Apps, AI & Web Development",
@@ -33,25 +35,27 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <ClerkProvider>
-      <html lang="en" className={`${geist.variable}`}>
-        <body>
-          <TRPCReactProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <div className="w-full min-h-svh flex flex-col items-center justify-start">
-                <NavbarWrapper />
-                {children}
-                <Toaster richColors position="top-center"/>
-                <FooterWrapper />
-              </div>
-            </ThemeProvider>
-          </TRPCReactProvider>
-        </body>
-      </html>
+      <NavbarProvider>
+        <html lang="en" className={`${geist.variable}`}>
+          <body>
+            <TRPCReactProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                <div className="w-full min-h-svh flex flex-col items-center justify-start">
+                  <NavbarWrapper />
+                  {children}
+                  <Toaster richColors position="top-center" />
+                  <FooterWrapper />
+                </div>
+              </ThemeProvider>
+            </TRPCReactProvider>
+          </body>
+        </html>
+      </NavbarProvider>
     </ClerkProvider>
 
   );
