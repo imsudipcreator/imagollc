@@ -105,30 +105,30 @@ export default function Navbar() {
 
     }, [openedSubRoutes, openedNav])
     return (
-        <nav className={cn("md:h-11 h-12 z-50 w-full flex items-center justify-center sticky top-0 backdrop-blur-lg transition-all duration-200",
-            openedNav ? "bg-white" : "bg-white/60"
+        <nav className={cn("md:h-11 h-12 z-50 w-full flex items-center text-[#1D1D1F] justify-center sticky top-0 backdrop-blur-md transition-all duration-200",
+            openedNav ? "bg-white" : "bg-white/80"
         )}>
             {/**Desktop Navbar */}
             <div className="w-full max-w-[61rem] h-full lg:flex hidden items-center justify-between">
                 <Link href={'/'}>
-                    <ImagoIcon className={''} />
+                    <ImagoIcon className={'hover:text-black'} />
                 </Link>
                 {
                     routes.map((route) => (
                         <Link
                             onMouseEnter={() => handleMouseHover(route.label)}
                             key={route.href} href={route.href}
-                            className={cn("text-[13px] ")}
+                            className={cn("text-[13px] hover:text-black")}
                         >
                             {route.label}
                         </Link>
                     ))
                 }
-                <button className="cursor-pointer flex items-center justify-center" onClick={() => { if (openedNav !== 'search') setOpenedNav('search') }}>
+                <button className="cursor-pointer flex items-center justify-center hover:text-black" onClick={() => { if (openedNav !== 'search') setOpenedNav('search') }}>
                     <ImagoSymbol fontSize="20px" name="search" />
                     {/* <Search01Icon className="size-[17px]" color="#333333"/> */}
                 </button>
-                <button onClick={() => setOpenedNav(prev => prev === 'profile' ? null : 'profile')} className="cursor-pointer flex items-center justify-center ">
+                <button onClick={() => setOpenedNav(prev => prev === 'profile' ? null : 'profile')} className="cursor-pointer flex items-center justify-center hover:text-black">
                     <ImagoSymbol fontSize="20px" name="person_crop_circle_badge_exclam" />
                 </button>
             </div>
@@ -148,41 +148,13 @@ export default function Navbar() {
                     <button onClick={() => setOpenedNav(prev => prev === 'search' ? null : 'search')}
                         className={`cursor-pointer flex items-center justify-center ${openedNav ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'} duration-500`}
                     >
-                        <i className="f7-icons hover:text-black" style={{ fontSize: '20px' }}>
-                            search
-                        </i>
+                        <ImagoSymbol fontSize="20px" name="search" />
                         {/* <Search01Icon className="size-[17px]" color="#333333"/> */}
                     </button>
                     <button onClick={() => setOpenedNav(prev => prev === 'profile' ? null : 'profile')}
                         className={`cursor-pointer flex items-center justify-center ${openedNav ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'} duration-500`}>
-                        <i className="f7-icons hover:text-black" style={{ fontSize: '20px' }}>
-                            person_crop_circle_badge_exclam
-                        </i>
+                        <ImagoSymbol fontSize="20px" name="person_crop_circle_badge_exclam" />
                     </button>
-                    {/* <div
-                        onClick={() => openedNav !== null ? setOpenedNav(null) : setOpenedNav('menu')}
-                        className="flex flex-col items-center relative h-2 w-4 ">
-                        <div
-                            id="line1"
-                            className="w-4 h-[1.5px] bg-[var(--color-navbar-icon)] rounded-full absolute"
-                            style={{
-                                top: "0%",
-                                left: "50%",
-                                transform: "translate(-50%, -50%)",
-                                transformOrigin: "center",
-                            }}
-                        />
-                        <div
-                            id="line2"
-                            className="w-4 h-[1.5px] bg-[var(--color-navbar-icon)] rounded-full absolute"
-                            style={{
-                                top: "100%",
-                                left: "50%",
-                                transform: "translate(-50%, -50%)",
-                                transformOrigin: "center",
-                            }}
-                        />
-                    </div> */}
 
                     <AnimatedHamburger toggle={() => openedNav !== null ? closeNavs() : setOpenedNav('menu')} isOpen={openedNav} />
                 </div>

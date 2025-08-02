@@ -10,7 +10,7 @@ interface ImagoSymbolProps {
 
 function ImagoSymbol({name, fontSize = '16px', className, styles} : ImagoSymbolProps) {
   return (
-     <i style={{ fontSize, ...styles }} className={cn('f7-icons', className)}>{name}</i>
+     <i style={{ fontSize, ...styles, display : 'flex', justifyContent : "center", alignItems : 'center' }} className={cn('f7-icons', className)}>{name}</i>
   )
 }
 

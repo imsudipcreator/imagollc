@@ -11,7 +11,7 @@ import { quickLinks, routes } from '@/constants/routes'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import ImagoSymbol from '@/components/icons/imago-symbol'
-import { useUser } from '@clerk/nextjs'
+import { SignOutButton, useUser } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
 import { useStaggerFadeIn } from '@/hooks/use-staggered-fade-in'
 
@@ -323,8 +323,35 @@ const ExpandedNavbar = () => {
 
     }, [openedNav]);
 
+
+
+    const menuItems = [
+        {
+            label: "My account",
+            href: "/account",
+            icon: {
+                name: "gear",
+                fontSize: "16px"
+            }
+        },
+        {
+            label: "Notifications",
+            href: "/account",
+            icon: {
+                name: "bell"
+            } // or you can skip this field
+        },
+        {
+            label: "My Plan",
+            href: "/account",
+            icon: {
+                name: "flame"
+            }
+        }
+    ];
+
     return (
-        <section ref={translucentDivRef} className='backdrop-blur-lg h-[calc(200vh)] bg-background/30 w-full md:top-11 top-12 z-[100] opacity-0 fixed'>
+        <section ref={translucentDivRef} className='backdrop-blur-md h-[calc(200vh)] bg-background/30 w-full md:top-11 top-12 z-[100] opacity-0 fixed'>
             <div onMouseLeave={isMobile ? () => null : closeNavs} ref={opaqueDivRef} className='w-full fixed top-0 overflow-hidden flex items-start justify-center bg-background overflow-y-scroll no-scrollbar'>
                 {openedNav === 'search' && (
                     <div ref={bgDivRef} className='lg:max-w-[61rem] lg:w-full w-[77%] flex flex-col justify-start gap-4'>
@@ -360,7 +387,7 @@ const ExpandedNavbar = () => {
                 )}
 
                 {openedNav === 'profile' && (
-                    <div ref={bgDivRef} className='lg:max-w-[61rem] lg:w-full  w-[77%] flex flex-col  gap-1.5'>
+                    <div ref={bgDivRef} className='lg:max-w-[61rem] lg:w-full w-[77%]  flex flex-col  gap-1.5'>
                         {
                             !isSignedIn ? (
                                 <>
@@ -369,9 +396,33 @@ const ExpandedNavbar = () => {
                                 </>
 
                             ) : (
-                                <>
-                                    <h1 className='text-3xl font-semibold text-wrap'>{`Hi, ${user?.emailAddresses[0]?.emailAddress}`}</h1>
-                                </>
+                                <div className='w-full text-wrap flex flex-col gap-4'>
+                                    <h1 className='text-xl font-semibold'>{`Hi, ${user?.emailAddresses[0]?.emailAddress}`}</h1>
+                                    <p className='text-accent-foreground'>This section is currently under development. Please consider visiting your account from the links provided below.</p>
+                                    <div className='flex flex-col gap-2 mt-4'>
+                                        <h1 className='font-medium text-muted-foreground'>My Profile</h1>
+                                        <ul className='space-y-1.5'>
+                                            {
+                                                menuItems.map(item => (
+                                                    <li key={item.label} onClick={closeNavs}>
+                                                        <Link href={item.href} className='flex items-center gap-2 cursor-pointer'>
+                                                            <ImagoSymbol name={item.icon.name} />
+                                                            {item.label}
+                                                        </Link>
+                                                    </li>
+                                                ))
+                                            }
+                                            <li onClick={closeNavs}>
+                                                <SignOutButton>
+                                                    <button className='flex items-center gap-2 cursor-pointer'>
+                                                        <ImagoSymbol name="power" />
+                                                        Log out
+                                                    </button>
+                                                </SignOutButton>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
 
                             )
                         }

@@ -4,6 +4,7 @@ import React from 'react'
 import * as SignIn from '@clerk/elements/sign-in'
 import * as Clerk from '@clerk/elements/common'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import ImagoRing from '../../../../public/assets/auth/imago-ring.webp'
 import ImagoIcon from '@/components/icons/imago-icon'
 import { Button } from '@/components/ui/button'
 import { LoaderIcon } from 'lucide-react'
@@ -11,6 +12,7 @@ import { Icons } from '@/components/icons/icons'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import Link from 'next/link'
+import Image from 'next/image'
 
 const SignInPage = () => {
     return (
@@ -20,14 +22,15 @@ const SignInPage = () => {
                     {(isGlobalLoading) => (
                         <>
                             <SignIn.Step name='start'>
-                                <Card className='w-full sm:w-96'>
+                                <Card className='w-full sm:w-96 shadow-xl'>
                                     <CardHeader>
-                                        <CardTitle className='flex items-center gap-1'>
-                                            <ImagoIcon />
-                                            Account
+                                        <CardTitle className='flex flex-col justify-center items-center gap-2.5 w-full '>
+                                            <Image src={ImagoRing} width={150} height={150} alt='Imago Logo' />
+                                            <p className='text-2xl'>Sign in with Imago</p>
                                         </CardTitle>
-                                        <CardTitle className='text-2xl font-bold'>Sign in to Imago</CardTitle>
-                                        <CardDescription>Welcome back! Please sign in to continue</CardDescription>
+                                        {/* <CardDescription className='text-center'>
+                                            Sign in to your imago account by filling out all the credentials.
+                                        </CardDescription> */}
                                     </CardHeader>
                                     <CardContent className='grid gap-y-4'>
                                         <div className='grid grid-cols-2 gap-x-4'>
