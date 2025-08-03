@@ -13,7 +13,7 @@ import ImagoSymbol from '@/components/icons/imago-symbol'
 
 const NavbarWrapper = () => {
     const pathname = usePathname()
-    const { isSignedIn } = useUser()
+    const { isSignedIn, isLoaded } = useUser()
     const navbarExcludedRoutes = ['/intelligence', '/sign-in', '/sign-up', '/community', '/developer/icreator']
     const shouldHideNavbar = navbarExcludedRoutes.some((route) => pathname.startsWith(route))
     const nativeNavbarRoutes = ['/community']
@@ -22,7 +22,7 @@ const NavbarWrapper = () => {
 
 
     useGSAP(() => {
-        if (!isSignedIn && slideRef?.current) {
+        if (!isSignedIn && isLoaded && slideRef?.current) {
             gsap.to(slideRef?.current, {
                 height: "40px",
                 paddingTop: "5px",

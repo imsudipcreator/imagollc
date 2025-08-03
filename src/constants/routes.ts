@@ -89,10 +89,10 @@ export const aboutRoutes = [
 ];
 
 export const navigationSections = [
-  { title: "Explore Imago", routes: exploreRoutes },
-  { title: "Account", routes: accountRoutes },
-  { title: "Developer", routes: developerRoutes },
-  { title: "Support", routes: supportRoutes },
-  { title: "Legal", routes: legalRoutes },
-  { title: "About", routes: aboutRoutes },
+  { label: "Explore Imago", routes: exploreRoutes },
+  { label: "Account", routes: accountRoutes },
+  { label: "Developer", routes: developerRoutes },
+  { label: "Support", routes: supportRoutes },
+  { label: "Legal", routes: legalRoutes },
+  { label: "About", routes: aboutRoutes },
 ];

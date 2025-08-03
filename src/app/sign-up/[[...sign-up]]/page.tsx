@@ -3,6 +3,7 @@ import { Icons } from '@/components/icons/icons'
 import ImagoIcon from '@/components/icons/imago-icon'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import ImagoRing from '../../../../public/assets/auth/imago-ring.webp'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
@@ -11,6 +12,7 @@ import * as SignUp from '@clerk/elements/sign-up'
 import { Loader } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
+import Image from 'next/image'
 
 
 const SignUpPage = () => {
@@ -23,12 +25,15 @@ const SignUpPage = () => {
                             <SignUp.Step name='start'>
                                 <Card className='w-full sm:w-96'>
                                     <CardHeader>
-                                        <CardTitle className='flex items-center gap-1'>
-                                            <ImagoIcon />
-                                            Account
-                                        </CardTitle>
-                                        <CardTitle className='text-2xl font-bold'>Create your account</CardTitle>
-                                        <CardDescription>Welcome! Please fill in the details to get started.</CardDescription>
+                                        <CardHeader>
+                                            <CardTitle className='flex flex-col justify-center items-center gap-2.5 w-full '>
+                                                <Image src={ImagoRing} width={150} height={150} alt='Imago Logo' />
+                                                <p className='text-2xl'>Sign up with Imago</p>
+                                            </CardTitle>
+                                            {/* <CardDescription className='text-center'>
+                                                Sign in to your imago account by filling out all the credentials.
+                                            </CardDescription> */}
+                                        </CardHeader>
                                     </CardHeader>
                                     <CardContent className='grid gap-y-4'>
                                         <div className="grid grid-cols-2 gap-x-4">

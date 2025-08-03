@@ -1,12 +1,13 @@
 'use client'
 
+import ImagoSymbol from '@/components/icons/imago-symbol'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/components/ui/drawer'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Separator } from '@/components/ui/separator'
-import { SidebarTrigger } from '@/components/ui/sidebar'
+import { SidebarTrigger, useSidebar } from '@/components/ui/sidebar'
 import { models, personas } from '@/constants/models'
 import { useIntelligence } from '@/contexts/intelligence-context'
 import { useIsMobile } from '@/hooks/use-mobile'
@@ -20,18 +21,19 @@ const Navbar = () => {
     const [open, setOpen] = useState(false)
     const pathname = usePathname()
     const { saveSettingsToLocal, resetToDefault } = useIntelligence()
+    const { toggleSidebar } = useSidebar()
 
     // useEffect(()=>{
 
     // },[pathname])
     return (
-        <nav className='flex items-center justify-between h-12 w-full px-3 py-2'>
+        <nav className='flex items-center justify-between h-12 w-full px-3 py-2 '>
             <div className='flex items-center justify-start gap-3 h-full'>
-                <SidebarTrigger>
-                    <Button variant={'secondary'} size={'sm'}>
-                        <PanelLeft />
-                    </Button>
-                </SidebarTrigger>
+                {/* <SidebarTrigger> */}
+                <Button variant={'ghost'} size={'icon'} onClick={toggleSidebar}>
+                    <ImagoSymbol name='sidebar_left' fontSize='22px' />
+                </Button>
+                {/* </SidebarTrigger> */}
                 <Separator orientation='vertical' className='h-5!' />
                 <p className='text-accent-foreground'>{pathname.split('/')[1]}</p>
             </div>
@@ -42,7 +44,7 @@ const Navbar = () => {
                         <Drawer open={open} onOpenChange={setOpen}>
                             <DrawerTrigger asChild>
                                 <Button variant={'ghost'} size={'icon'}>
-                                    <Settings />
+                                    <ImagoSymbol name='gear' fontSize='22px' />
                                 </Button>
                             </DrawerTrigger>
                             <DrawerContent>
@@ -77,7 +79,7 @@ const Navbar = () => {
                         <Dialog open={open} onOpenChange={setOpen}>
                             <DialogTrigger asChild>
                                 <Button variant={'ghost'} size={'icon'}>
-                                    <Settings />
+                                    <ImagoSymbol name='gear' fontSize='22px' />
                                 </Button>
                             </DialogTrigger>
                             <DialogContent>
