@@ -39,19 +39,12 @@ export default function RootLayout({
         <html lang="en" className={`${geist.variable}`}>
           <body>
             <TRPCReactProvider>
-              <ThemeProvider
-                attribute="class"
-                defaultTheme="system"
-                enableSystem
-                disableTransitionOnChange
-              >
-                <div className="w-full min-h-svh flex flex-col items-center justify-start">
-                  <NavbarWrapper />
-                  {children}
-                  <Toaster richColors position="top-center" />
-                  <FooterWrapper />
-                </div>
-              </ThemeProvider>
+              <div className="w-full min-h-svh flex flex-col items-center justify-start">
+                <NavbarWrapper />
+                {children}
+                <Toaster richColors position="top-center" />
+                <FooterWrapper />
+              </div>
             </TRPCReactProvider>
           </body>
         </html>

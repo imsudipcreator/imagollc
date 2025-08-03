@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { ArrowUp, Globe, Loader, Paperclip } from 'lucide-react';
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form';
 import TextareaAutosize from 'react-textarea-autosize';
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -15,6 +15,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
 import { useIntelligence } from '@/contexts/intelligence-context';
 import type { Model } from '@/types/intel-types';
+import { ChatPromptBox } from '@/components/21st-dev-ui/chat-prompt-input';
 
 
 const formSchema = z.object({
@@ -28,6 +29,7 @@ const InputBar = () => {
     const { user } = useUser()
     const { id } = useParams()
     const router = useRouter()
+    const myRef = useRef(null)
     const { setIsGeneratingResponse, setMessages, selectedModel, selectedPersona, customPrompt } = useIntelligence()
     const [selectedWebSearch, setSelectedWebSearch] = useState(false)
     const [isFocused, setIsFocused] = useState(false)
@@ -131,7 +133,7 @@ const InputBar = () => {
                 chatId,
                 prompt: values.value,
                 model: selectedModel as Model,
-                persona : selectedPersona,
+                persona: selectedPersona,
                 history: getHistory(),
                 customPrompt
             })
@@ -159,56 +161,16 @@ const InputBar = () => {
     return (
         <Form {...form}>
             <div className='md:w-full w-[94%] flex max-w-3xl items-center justify-center mx-auto left-0 right-0 pb-3 absolute bottom-0 bg-background rounded-t-3xl'>
-                {/* <div className='h-6 absolute left-0 right-0 -top-6 bg-gradient-to-b from-transparent to-background' /> */}
                 <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className={cn(
-                        'max-w-3xl w-full p-4 rounded-3xl border border-border transition-colors duration-200',
-                        isFocused && 'border-black'
-                    )}>
+                    onSubmit={form.handleSubmit(onSubmit)} className='w-full'>
                     <FormField
                         control={form.control}
                         name='value'
                         render={({ field }) => (
-                            <TextareaAutosize
-                                {...field}
-                                minRows={2}
-                                maxRows={8}
-                                className='resize-none bg-transparent w-full outline-none'
-                                placeholder='Ask intelligence...'
-                                onFocus={() => setIsFocused(true)}
-                                onBlur={() => setIsFocused(false)}
-                                onKeyDown={async (e) => {
-                                    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-                                        e.preventDefault()
-                                        await form.handleSubmit(onSubmit)(e)
-                                    }
-                                }}
-                            />
+                            <ChatPromptBox value={field.value} onChange={field.onChange} />
                         )}
                     />
-
-                    <div className='flex items-center justify-between'>
-                        <div className='flex items-center gap-1.5'>
-                            <Button variant={'secondary'} size={'icon'} className='rounded-full'>
-                                <Paperclip />
-                            </Button>
-                            <Button onClick={() => setSelectedWebSearch(prev => !prev)} variant={'outline'} className={cn('rounded-full', selectedWebSearch && 'text-blue-500')}>
-                                <Globe />
-                                Search the web
-                            </Button>
-                        </div>
-
-                        <div className='flex'>
-                            <Button type='submit' disabled={!form.formState.isValid || isPending} size={'icon'} className='rounded-full'>
-                                {
-                                    isPending ? <Loader className='animate-spin' /> : <ArrowUp className='size-5' />
-                                }
-                            </Button>
-                        </div>
-                    </div>
                 </form>
-
             </div>
         </Form>
 

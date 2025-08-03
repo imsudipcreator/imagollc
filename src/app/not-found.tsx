@@ -1,18 +1,16 @@
-import { Button } from '@/components/ui/button'
-import { CloudAlert } from 'lucide-react'
+// import { Button } from '@/components/systemui/button'
+import ImagoSymbol from '@/components/icons/imago-symbol'
 import Link from 'next/link'
 import React from 'react'
 
-const NotFoundPage = () => {
+function NotFoundPage() {
     return (
-        <div className='min-h-svh w-full flex flex-col gap-8 items-center justify-center text-center'>
-            <CloudAlert className='size-24 text-orange-300'/>
-            <h1 className='font-semibold text-3xl px-12'>The page you are looking for couldn&apos;t be found!</h1>
-            <Button>
-                <Link href={'/'}>
-                    Go back to home
-                </Link>
-            </Button>
+        <div className='min-h-[500px]  w-full flex flex-col items-center justify-center gap-4'>
+            <h1 className='font-semibold text-3xl w-80 text-center'>The page you&apos;re looking for can&apos;t be found.</h1>
+            <Link href={'/sitemap'} className='group text-theme flex items-center gap-1'>
+                <button className='group-hover:underline'>See the sitemap</button>
+                <ImagoSymbol name='chevron_right' fontSize='10px'/>
+            </Link>
         </div>
     )
 }

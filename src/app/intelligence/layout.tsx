@@ -6,6 +6,7 @@ import Navbar from './components/navbar'
 import InputBar from './components/input-bar'
 import { IntelligenceProvider } from '@/contexts/intelligence-context'
 import { SidebarContextProvider } from './contexts/SidebarContext'
+import { ChatPromptBox } from './components/chat-prompt-input'
 
 export const metadata: Metadata = {
   title: "Intelligence - AI for the rest of us",
@@ -22,7 +23,8 @@ const IntelligenceLayout = ({ children }: { children: React.ReactNode }) => {
             <main className='flex flex-col flex-1 min-h-0 overflow-y-auto relative'>
               <Navbar />
               {children}
-              <InputBar />
+              {/* <InputBar /> */}
+              <ChatPromptBox />
             </main>
           </div>
         </SidebarProvider>
