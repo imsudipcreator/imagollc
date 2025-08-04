@@ -61,7 +61,12 @@ import { useRef } from "react"
 //     },
 // ]
 
-export default function Navbar() {
+
+interface NavbarProps {
+    position?: string
+}
+
+export default function Navbar({ position }: NavbarProps) {
     const { isSignedIn } = useUser()
     const { setOpenedNav, openedNav, openedSubRoutes, setOpenedSubRoutes, closeNavs } = useNavbar()
     const closeSubRouteRef = useRef<HTMLButtonElement>(null)
@@ -106,7 +111,7 @@ export default function Navbar() {
     }, [openedSubRoutes, openedNav])
     return (
         <nav className={cn("md:h-11 h-12 z-50 w-full flex items-center text-[#1D1D1F] justify-center sticky top-0 backdrop-blur-md transition-all duration-200",
-            openedNav ? "bg-white" : "bg-white/80"
+            openedNav ? "bg-white" : "bg-white/80", position
         )}>
             {/**Desktop Navbar */}
             <div className="w-full max-w-[61rem] h-full lg:flex hidden items-center justify-between">

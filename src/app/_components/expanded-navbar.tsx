@@ -302,6 +302,23 @@ const ExpandedNavbar = () => {
 
     useEffect(() => {
         if (typeof window === "undefined") return; //ssr safe
+        if (window.innerWidth < 1024) return
+        const handleScroll = (e: Event) => {
+            console.log("Scrolled!", e);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+
+        // Clean up
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, [])
+
+
+    useEffect(() => {
+        console.log("useEffect running"); // debug
+        if (typeof window === "undefined") return; //ssr safe
 
 
         if (window.innerWidth <= 1024) {
