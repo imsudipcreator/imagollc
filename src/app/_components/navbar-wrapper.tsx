@@ -15,14 +15,16 @@ const NavbarWrapper = () => {
     const pathname = usePathname()
     const { isSignedIn, isLoaded } = useUser()
     const navbarExcludedRoutes = ['/intelligence', '/sign-in', '/sign-up', '/community', '/developer/icreator']
+    const shouldShowConnect = ['/']
+    const connectRoutes = shouldShowConnect.some((route) => pathname === route)
     const shouldHideNavbar = navbarExcludedRoutes.some((route) => pathname.startsWith(route))
-    const nativeNavbarRoutes = ['/community']
+    const nativeNavbarRoutes = ['/community', '/one']
     const nativeNav = nativeNavbarRoutes.some(route => pathname.startsWith(route))
     const slideRef = useRef<HTMLDivElement>(null)
 
 
     useGSAP(() => {
-        if (!isSignedIn && isLoaded && slideRef?.current) {
+        if (!isSignedIn && isLoaded && slideRef?.current && connectRoutes) {
             gsap.to(slideRef?.current, {
                 height: "40px",
                 paddingTop: "5px",
@@ -46,7 +48,7 @@ const NavbarWrapper = () => {
     }
     return (
         <>
-            <Navbar />
+            <Navbar position={nativeNav ? "static" : ""} />
             <ExpandedNavbar />
             <div
                 ref={slideRef}
