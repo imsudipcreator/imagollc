@@ -6,10 +6,10 @@ import Footer from './footer'
 
 const FooterWrapper = () => {
     const pathname = usePathname()
-    const footerIncludedRoutes = ['/', '/policy', '/policy/privacy', '/policy/submission', '/policy/terms']
-    const shouldShowFooter = footerIncludedRoutes.some((route) => pathname === route)
+    const footerExcludedRoutes = ['/community', '/developer/icreator', '/intelligence', '/sign-in', '/sign-up']
+    const shouldHideFooter = footerExcludedRoutes.some((route) => pathname.startsWith(route))
 
-    if (!shouldShowFooter) {
+    if (shouldHideFooter) {
         return null
     }
     return (
