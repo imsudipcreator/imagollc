@@ -68,7 +68,7 @@ const ImagoOnePage = () => {
 
             </div>
             <div className="relative flex w-full flex-col items-center justify-center overflow-x-hidden">
-                <Marquee pauseOnHover className="[--duration:20s]">
+                <Marquee pauseOnHover className="[--duration:20s] [animation-play-state:paused]">
                     {marqueeList01.map((img) => (
                         <MarqueeCard key={img.src} img={img.src} />
                     ))}
@@ -83,6 +83,12 @@ const ImagoOnePage = () => {
                         <MarqueeCard key={img.src} img={img.src} height='h-32'/>
                     ))}
                 </Marquee>
+            </div>
+
+            <div className='md:w-full max-w-[61rem] w-[92%] flex flex-col min-h-80 md:min-h-svh items-center justify-center'>
+                <h1 className='md:text-7xl text-4xl font-semibold text-center'>
+                    A world of <br className='md:hidden'/> world-class <br /> entertainment.
+                </h1>
             </div>
 
         </div>
