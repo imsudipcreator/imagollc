@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://imagollc.vercel.app
+
+# Sitemaps
+Sitemap: https://imagollc.vercel.app/sitemap.xml
