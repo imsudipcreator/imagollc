@@ -206,6 +206,41 @@ const createVariantsWithTransition = (
   };
 };
 
+/**
+ * A component that animates text by breaking it up into segments and
+ * animating them in sequence.
+ *
+ * @param {React.ReactNode} children - The text to animate.
+ * @param {PerType} per - The type of segment to animate. Can be 'char',
+ *   'word', or 'line'. Defaults to 'word'.
+ * @param {keyof JSX.IntrinsicElements} as - The HTML element to render as.
+ *   Defaults to 'p'.
+ * @param {Variants} variants - Variants to use for the animation.
+ * @param {string} className - Additional CSS class to apply to the
+ *   container element.
+ * @param {PresetType} preset - A pre-defined set of variants to use.
+ *   Can be 'fade', 'blur', 'scale', or 'slide'. Defaults to 'fade'.
+ * @param {number} delay - The delay, in seconds, before starting the
+ *   animation. Defaults to 0.
+ * @param {number} speedReveal - The speed at which the segments are
+ *   revealed. Defaults to 1.
+ * @param {number} speedSegment - The speed at which each segment is
+ *   animated. Defaults to 1.
+ * @param {boolean} trigger - Whether to trigger the animation. Defaults
+ *   to true.
+ * @param {() => void} onAnimationComplete - Callback to run when the
+ *   animation is complete.
+ * @param {() => void} onAnimationStart - Callback to run when the
+ *   animation starts.
+ * @param {string} segmentWrapperClassName - Additional CSS class to
+ *   apply to each segment wrapper element.
+ * @param {Transition} containerTransition - Additional transition
+ *   properties to apply to the container element.
+ * @param {Transition} segmentTransition - Additional transition
+ *   properties to apply to each segment element.
+ * @param {React.CSSProperties} style - Additional CSS styles to apply
+ *   to the container element.
+ */
 export function TextEffect({
   children,
   per = 'word',
