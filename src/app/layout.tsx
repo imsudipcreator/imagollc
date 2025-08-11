@@ -6,7 +6,6 @@ import { Geist } from "next/font/google";
 
 import { TRPCReactProvider } from "@/trpc/react";
 import NavbarWrapper from "./_components/navbar-wrapper";
-import { ThemeProvider } from "@/components/theme-provider";
 import FooterWrapper from "./_components/footer-wrapper";
 import { Toaster } from "@/components/ui/sonner";
 import 'framework7-icons';

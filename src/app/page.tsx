@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
 'use client'
 
-import React, { useEffect, useRef, useState } from 'react'
-import ImagoHero from '../../public/assets/home/imago-hero.png'
-import ImagoHeroSm from '../../public/assets/home/imago-hero-sm.png'
+import React, { useRef } from 'react'
+import ImagoHero from '../../public/assets/home/imago-hero.webp'
+import ImagoHeroSm from '../../public/assets/home/imago-hero-sm.webp'
 import DeviceDesktopMockupSm from '../../public/assets/home/device-desktop-mockup-sm.webp'
 import DeviceDesktopMockup from '../../public/assets/home/device-desktop-mockup.webp'
 import AppsFloat from '../../public/assets/home/apps-float.webp'
@@ -17,9 +16,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { Slot } from '@radix-ui/react-slot'
 import { cn } from '@/lib/utils'
 import { TextEffect } from '@/components/motion-primitives/text-effect'
-import { AiImageProviders, HyperRealistic, HyperRealisticLg, MedievalLg, Landscape, LandscapeLg, PastelArt, PastelArtLg, Robot } from '../../public/assets/home/carousel'
-import 'keen-slider/keen-slider.min.css'
-import { useKeenSlider } from 'keen-slider/react'
+import { HyperRealistic, HyperRealisticLg, MedievalLg, Landscape, LandscapeLg, PastelArt, PastelArtLg, Robot } from '../../public/assets/home/carousel'
 import ImagoSymbol from '@/components/icons/imago-symbol'
 import { Marquee } from '@/components/magicui/marquee'
 import { useIsMobile } from '@/hooks/use-mobile'
@@ -133,20 +130,25 @@ const horizontalImages: Image[] = [
 
 const IntelligencePage = () => {
   const isMobile = useIsMobile()
+
   return (
     <main className="w-full min-h-screen bg-white flex flex-col items-center justify-start gap-4">
       {/* <section className="w-full h-56 absolute top-12 bg-white/60 backdrop-blur-3xl">
 
       </section> */}
+      <link rel="preload" as="image" href="../../public/assets/home/imago-hero.webp" />
       <section
         className="w-full sm:flex hidden flex-col items-center justify-center min-h-svh gap-3 relative bg-[#240043]"
-        style={{
-          backgroundImage: `url(${(ImagoHero).src})`,
-          backgroundPosition: "center",
-          backgroundSize: "contain",
-          backgroundRepeat: "no-repeat",
-        }}
       >
+
+        <Image
+          src={ImagoHero.src}
+          alt="Imago hero"
+          fill
+          priority
+          quality={100}
+          className="object-contain object-center h-full"
+        />
         <TextEffect preset='fade-in-blur' speedReveal={1.1} speedSegment={0.3} className='absolute bottom-1/6 md:bottom-1/12 text-white  text-lg text-center md:w-[80%] w-[88%]'>
           Welcome to imago llc. Here we craft intelligent digital solutions — Apps, Websites & AI That Work
           for You.
@@ -154,13 +156,15 @@ const IntelligencePage = () => {
       </section>
       <section
         className="w-full flex sm:hidden flex-col items-center justify-center min-h-svh gap-3 relative bg-[#240043]"
-        style={{
-          backgroundImage: `url(${(ImagoHeroSm).src})`,
-          backgroundPosition: "center",
-          backgroundSize: "contain",
-          backgroundRepeat: "no-repeat",
-        }}
       >
+        <Image
+          src={ImagoHeroSm.src}
+          alt="Imago hero"
+          fill
+          priority
+          quality={100}
+          className="object-contain object-center h-full"
+        />
         <TextEffect preset='fade-in-blur' speedReveal={1.1} speedSegment={0.3} className='absolute bottom-1/6 md:bottom-1/12 text-white  text-lg text-center md:w-[80%] w-[88%]'>
           Welcome to imago llc. Here we craft intelligent digital solutions — Apps, Websites & AI That Work
           for You.
@@ -372,38 +376,6 @@ interface CarouselProps {
 
 function Carousel({ images }: CarouselProps) {
   const isMobile = useIsMobile()
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [isInfiniteScroll, setIsInfiniteScroll] = useState(false)
-  const SLIDE_WIDTH = 300;
-
-  function showPrevImage() {
-    setCurrentIndex(idx => {
-      if (idx === 0) {
-        return images.length - 1
-      }
-      return idx - 1
-    })
-  }
-
-  function showNextImage() {
-    setCurrentIndex(idx => {
-      if (idx === images.length - 1) {
-        return 0
-      }
-
-      return idx + 1
-    })
-  }
-
-
-  // console.log(currentIndex)
-
-  // useEffect(() => {
-  //   if (!isInfiniteScroll) return
-  //   const interval = setInterval(() => showNextImage(), 5000)
-  //   return () => clearInterval(interval)
-
-  // }, [isInfiniteScroll, showNextImage])
 
   return (
     <div className='w-full md:h-[calc(100vh-200px)] h-[calc(100vh-400px)] overflow-y-clip flex items-center gap-5 relative'>
@@ -411,8 +383,8 @@ function Carousel({ images }: CarouselProps) {
       <Marquee pauseOnHover className='[--duration:20s]'>
         {
           images.map((image, idx) => (
-            <Link href={'/community'} key={idx} className='flex flex-col items-center justify-center gap-2 relative h-[30rem]'>
-              <Image src={image.url} alt={image.title} className={cn('h-full object-cover', isMobile ? 'w-[280px]' : 'w-fit')} width={280} height={SLIDE_WIDTH} />
+            <Link href={'/community'} key={idx} className='flex flex-col items-center justify-center gap-2 relative h-[30rem] md:h-[20rem]'>
+              <Image src={image.url} alt={image.title} className={cn('h-full object-cover', isMobile ? 'w-[280px]' : 'w-fit')} width={280} height={400} />
               <div className='absolute bg-radial from-transparent to-black/70 w-full text-white flex flex-col h-full py-12 bottom-0 items-center justify-between gap-1'>
                 <div className={`flex items-center gap-1 $`}>
                   <ImagoIcon className='size-3' />
@@ -426,7 +398,6 @@ function Carousel({ images }: CarouselProps) {
                     <ImagoSymbol name='arrow_up_right' fontSize='18px' />
                   </Button>
                 </div>
-
               </div>
             </Link>
           ))
