@@ -53,7 +53,7 @@ export const quickLinks = [
 
 export const exploreRoutes = [
   { label: "Home", href: "/" },
-  { label: "iStore", href: "/apps" },
+  { label: "iStore", href: "/store" },
   { label: "webStore", href: "/websites" },
   { label: "Intelligence", href: "/intelligence" },
   { label: "Community", href: "/community" },
@@ -62,7 +62,7 @@ export const exploreRoutes = [
 
 export const accountRoutes = [
   { label: "Manage Your Imago Account", href: "/" },
-  { label: "Imago Creator Account", href: "/apps" },
+  { label: "Imago Creator Account", href: "/account" },
 ];
 
 export const developerRoutes = [
