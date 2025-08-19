@@ -304,7 +304,7 @@ const ExpandedNavbar = () => {
         if (typeof window === "undefined") return; //ssr safe
         if (window.innerWidth < 1024) return
         const handleScroll = (e: Event) => {
-            console.log("Scrolled!", e);
+            // console.log("Scrolled!", e);
         };
 
         window.addEventListener('scroll', handleScroll);
