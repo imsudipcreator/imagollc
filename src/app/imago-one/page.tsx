@@ -42,6 +42,7 @@ export type SubscriptionPlan = {
         name: string,
         price: number
     }[],
+    link? : string
 }
 
 const subscription_faq = [
@@ -124,7 +125,8 @@ const subscription_plans: SubscriptionPlan[] = [
             { name: "Community+", price: 40 },     // Access to community & support  
             { name: "Apps+", price: 40 },          // Basic access to Imago apps  
             { name: "Creator+", price: 35 }        // Starter creator tools  
-        ]
+        ],
+        link : "https://buy.stripe.com/test_9B6aEZfbFfDU24c2vw0oM05"
     },
     {
         name: "Team",
@@ -143,7 +145,8 @@ const subscription_plans: SubscriptionPlan[] = [
             { name: "Creator+", price: 50 },      // Creator tools (publishing, collab tools)
             { name: "DevSuite+", price: 30 },     // Websites & app dev for the team
             { name: "AI-Integration+", price: 20 } // AI workflows, automation integration
-        ]
+        ],
+        link : "https://buy.stripe.com/test_9B6aEZfbFfDU24c2vw0oM05"
     },
 ]
 

@@ -51,14 +51,14 @@ const PaymentCard = ({ plan }: PaymentCardProps) => {
                     See price breakdown
                     <ImagoSymbol name='plus_circle' fontSize='18px' />
                 </button>
-                <button className='rounded-full p-2 flex items-center gap-2 w-full border text-white bg-black border-black justify-center  hover:bg-transparent hover:text-black transition-colors duration-300 cursor-pointer'>
+                <button onClick={() => window.open(plan.link)} className='rounded-full p-2 flex items-center gap-2 w-full border text-white bg-black border-black justify-center  hover:bg-transparent hover:text-black transition-colors duration-300 cursor-pointer'>
                     Purchase now
                 </button>
             </div>
 
 
             <button onClick={toggleBreakdown} className={cn('absolute right-8 top-8 cursor-pointer', openedBreakdown ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none')}>
-                <ImagoSymbol name='minus_circle' fontSize='28px'/>
+                <ImagoSymbol name='minus_circle' fontSize='28px' />
             </button>
         </div>
     )
