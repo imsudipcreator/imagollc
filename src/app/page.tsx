@@ -249,7 +249,7 @@ const blocksData = [
     btnGroup: (
       <div className="flex items-center gap-4">
         <Button variant={'imago'}>
-          <Link href={'/apps'}>
+          <Link href={'/store'}>
             Visit webStore
           </Link>
         </Button>
@@ -296,7 +296,7 @@ const blocksData = [
     btnGroup: (
       <div className="flex flex-row gap-4">
         <Button variant={'imago'}>
-          <Link href={'imago-one'}>
+          <Link href={'/imago-one'}>
             Try imago one for free
           </Link>
         </Button>

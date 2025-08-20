@@ -18,7 +18,7 @@ const NavbarWrapper = () => {
     const shouldShowConnect = ['/']
     const connectRoutes = shouldShowConnect.some((route) => pathname === route)
     const shouldHideNavbar = navbarExcludedRoutes.some((route) => pathname.startsWith(route))
-    const nativeNavbarRoutes = ['/community', '/one']
+    const nativeNavbarRoutes = ['/community', '/imago-one']
     const nativeNav = nativeNavbarRoutes.some(route => pathname.startsWith(route))
     const slideRef = useRef<HTMLDivElement>(null)
 
