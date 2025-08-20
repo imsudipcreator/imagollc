@@ -1,7 +1,7 @@
 export const routes = [
   { label: "Home", href: "/" },
   { label: "iStore", href: "/store" },
-  { label: "One", href: "/one" },
+  { label: "One", href: "/imago-one" },
   { label: "Intelligence", href: "/intelligence" },
   { label: "Community", href: "/community" },
   {
@@ -57,7 +57,7 @@ export const exploreRoutes = [
   { label: "webStore", href: "/websites" },
   { label: "Intelligence", href: "/intelligence" },
   { label: "Community", href: "/community" },
-  { label: "One", href: "/one" },
+  { label: "One", href: "/imago-one" },
 ];
 
 export const accountRoutes = [
