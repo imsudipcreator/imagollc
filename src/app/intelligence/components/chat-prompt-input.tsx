@@ -45,6 +45,23 @@ const LightbulbIcon = (props: React.SVGProps<SVGSVGElement>) => (<svg viewBox="0
 
 const toolsList = [{ id: 'createImage', name: 'Create an image', shortName: 'Image', icon: PaintBrushIcon }, { id: 'searchWeb', name: 'Search the web', shortName: 'Search', icon: GlobeIcon }, { id: 'writeCode', name: 'Write or code', shortName: 'Write', icon: PencilIcon }, { id: 'deepResearch', name: 'Run deep research', shortName: 'Deep Search', icon: TelescopeIcon, extra: '5 left' }, { id: 'thinkLonger', name: 'Think for longer', shortName: 'Think', icon: LightbulbIcon },];
 
+
+
+const createMessage = (
+    ctx: { userId: string },
+    input: { chatId: string, model: string, input: string },
+    role: "user" | "assistant"
+) => ({
+    id: crypto.randomUUID(),
+    userId: ctx.userId,
+    chatId: input.chatId,
+    role,
+    type: "result",
+    model: input.model,
+    content: input.input,
+})
+
+
 // --- The Final, Self-Contained PromptBox Component ---
 export const ChatPromptBox = React.forwardRef<HTMLTextAreaElement, React.TextareaHTMLAttributes<HTMLTextAreaElement>>(
     ({ className, ...props }, ref) => {
@@ -88,7 +105,7 @@ export const ChatPromptBox = React.forwardRef<HTMLTextAreaElement, React.Textare
         const createMessage = api.message.create.useMutation({
             onSuccess: () => {
                 setValue("")
-                toast.success("success")
+                // toast.success("success")
                 setIsGeneratingResponse({
                     state: true,
                     log: "Generating"

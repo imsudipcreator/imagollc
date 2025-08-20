@@ -8,7 +8,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 
-type MessageType = {
+export type MessageType = {
     id: string
     model: string
     createdAt: Date
