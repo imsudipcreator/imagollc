@@ -77,7 +77,7 @@ export const messageRouter = createTRPCRouter({
           )
           .optional(),
         chatId: z.string(),
-        model: z.enum(["imi1", "imi1c", "imi2", "imi2c", "imi3", "imi4"]),
+        model: z.enum(["imi1", "imi1c", "imi2", "imi2c", "imi3", "imi4", "imioss", "imiossc"]),
       }),
     )
     .mutation(async ({ input, ctx }) => {
