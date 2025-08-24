@@ -14,7 +14,7 @@ import ImagoSymbol from '@/components/icons/imago-symbol'
 const NavbarWrapper = () => {
     const pathname = usePathname()
     const { isSignedIn, isLoaded } = useUser()
-    const navbarExcludedRoutes = ['/intelligence', '/sign-in', '/sign-up', '/community', '/developer/icreator']
+    const navbarExcludedRoutes = ['/intelligence', '/sign-in', '/sign-up', '/community', '/developer/icreator', '/labs/nsfw']
     const shouldShowConnect = ['/']
     const connectRoutes = shouldShowConnect.some((route) => pathname === route)
     const shouldHideNavbar = navbarExcludedRoutes.some((route) => pathname.startsWith(route))

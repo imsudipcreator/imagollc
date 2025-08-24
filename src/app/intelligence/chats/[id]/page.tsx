@@ -3,7 +3,7 @@
 import { cn } from '@/lib/utils'
 import { api } from '@/trpc/react'
 import { useParams, useRouter } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import MarkdownRender from '../../components/markdown-render'
 import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuShortcut, ContextMenuTrigger } from '@/components/ui/context-menu'
 import { Loader, TriangleAlert } from 'lucide-react'
@@ -15,6 +15,7 @@ import { copyTextToClipboard } from '@/utils/copy-to-clipboard'
 const ChatPage = () => {
     const { id } = useParams()
     const router = useRouter()
+    const bottomDivRef = useRef<HTMLDivElement>(null)
     const { isGeneratingResponse, isMessageLoading, isMessageError, messages } = useIntelligence()
     const { data: chatId, isLoading: chatIdVerifying } = api.chat.getOne.useQuery({
         chatId: id as string
@@ -29,6 +30,13 @@ const ChatPage = () => {
             router.replace('/intelligence')
         }
     }, [chatId, router, chatIdVerifying])
+
+
+    useEffect(() => {
+        if (bottomDivRef.current) {
+            bottomDivRef.current.scrollIntoView({ behavior: 'smooth' })
+        }
+    }, [messages, id])
 
 
 
@@ -84,6 +92,7 @@ const ChatPage = () => {
                         <span className='text-muted-foreground font-semibold text-lg animate-pulse py-2 px-3'>{isGeneratingResponse.log}</span>
                     )
                 }
+                <div ref={bottomDivRef} className='w-full h-12 bg-transparent' />
             </div>
         </div >
     )

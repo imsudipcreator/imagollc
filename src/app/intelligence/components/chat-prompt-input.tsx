@@ -88,7 +88,8 @@ export const ChatPromptBox = React.forwardRef<HTMLTextAreaElement, React.Textare
         const { user } = useUser()
         const { id } = useParams()
         const router = useRouter()
-        const { setIsGeneratingResponse, setMessages, selectedModel, selectedPersona, customPrompt } = useIntelligence()
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const { setIsGeneratingResponse, setMessages, selectedModel, selectedPersona, customPrompt, refetchChats } = useIntelligence()
         const { data: messages, refetch } = api.message.getHistoryforAi.useQuery({
             chatId: id as string
         }, {
@@ -135,6 +136,8 @@ export const ChatPromptBox = React.forwardRef<HTMLTextAreaElement, React.Textare
 
             if (!chatId) {
                 const newChatId = await createChat.mutateAsync()
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+                void refetchChats()
                 return newChatId
             }
 
