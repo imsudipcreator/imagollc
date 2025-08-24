@@ -3,7 +3,7 @@
 import { Sidebar, SidebarContent, SidebarGroup, SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar'
 import React from 'react'
 import ImagoIcon from '@/components/icons/imago-icon'
-import { AlertCircle,  Ellipsis, GalleryVerticalEnd, Loader, Pencil, PencilLine, Pin, Trash } from 'lucide-react'
+import { AlertCircle, Ellipsis, GalleryVerticalEnd, Loader, Pencil, PencilLine, Pin, Trash } from 'lucide-react'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog'
@@ -18,6 +18,7 @@ import { Input } from '@/components/ui/input'
 import { useSidebar } from '../contexts/SidebarContext'
 import { toast } from 'sonner'
 import UserFooter from '@/components/user-footer'
+import { useIntelligence } from '@/contexts/intelligence-context'
 
 
 // const chats = [
@@ -41,8 +42,9 @@ type ChatType = {
 
 const AppSidebar = () => {
     const { slug, chatId, setSlug } = useSidebar()
+    const { chats, isChatsLoading, isChatsError } = useIntelligence()
     const router = useRouter()
-    const { data: chats, isLoading, isError } = api.chat.getMany.useQuery()
+
     const updateSlug = api.chat.updateOne.useMutation({
         onSuccess: (data) => {
             toast.success(data)
@@ -144,7 +146,7 @@ const AppSidebar = () => {
                             <SidebarGroupLabel>Chat History</SidebarGroupLabel>
                             <SidebarMenu>
                                 {
-                                    isError && (
+                                    isChatsError && (
                                         <SidebarMenuItem>
                                             <Alert variant={'destructive'}>
                                                 <AlertCircle />
@@ -158,7 +160,7 @@ const AppSidebar = () => {
                                     )
                                 }
                                 {
-                                    isLoading && (
+                                    isChatsLoading && (
                                         <SidebarMenuItem>
                                             <SidebarMenuButton className=''>
                                                 <Loader className='animate-spin' />
@@ -218,7 +220,7 @@ const AppSidebar = () => {
                     </Dialog>
                 </AlertDialog>
             </SidebarContent>
-            <UserFooter/>
+            <UserFooter />
         </Sidebar>
     )
 }

@@ -1,6 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 
-export type Model = "imi1" | "imi1c" | "imi2" | "imi2c" | "imi3" | "imi4";
+export type Model = "imi1" | "imi1c" | "imi2" | "imi2c" | "imi3" | "imi4" | "imioss" | "imiossc";
 export type Persona =
   | "default"
   | "casual"

@@ -24,6 +24,8 @@ enum Model {
     imi2c
     imi3
     imi4
+    imioss
+    imiossc
 }
 
 enum Status {

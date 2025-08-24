@@ -12,9 +12,7 @@ import {
   Settings2,
 } from "lucide-react";
 
-
-
-export const models : ModelData[] = [
+export const models: ModelData[] = [
   {
     label: "IMI 1",
     value: "imi1",
@@ -31,7 +29,7 @@ export const models : ModelData[] = [
     description: "Balanced and versatile",
   },
   {
-    label: "IMI 2",
+    label: "IMI 2c",
     value: "imi2c",
     description: "All rounder",
   },
@@ -45,9 +43,19 @@ export const models : ModelData[] = [
     value: "imi4",
     description: "Best for coding and analysis",
   },
+  {
+    label: "IMI OSS",
+    value: "imioss",
+    description: "Latest Super AI model",
+  },
+  {
+    label: "IMI OSSc",
+    value: "imiossc",
+    description: "Creative OSS model",
+  },
 ];
 
-export const personas : PersonaData[] = [
+export const personas: PersonaData[] = [
   {
     label: "Default",
     value: "default",
