@@ -73,6 +73,7 @@ export const callIMI = inngest.createFunction(
 export const createCommunityPost = inngest.createFunction(
   { id: "create-community-post", retries: 1 },
   { event: "create-community-post/run" },
+  
   async ({ event, step }) => {
     const { taskId, prompt, userId } = event.data as {
       taskId: string;
